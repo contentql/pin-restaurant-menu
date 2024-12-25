@@ -1,0 +1,108 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* 
+  hex-codes:
+
+  primary: #A978DE
+  text: #F4F4F5
+  text-secondary: #A1A1AA
+  background-color: #09090B
+  card: #18181B
+  input: #55555a
+  info: #69bbf9;
+  info-foreground: #092848;
+  warning-foreground: #361900;
+  warning: #ff9300;
+  danger: #ff565f;
+  danger-foreground: #440d13;
+  success: #00ca50;
+  success-foreground: #00320b
+  popover: #0C0C0C
+*/
+
+@layer base {
+  /* followed the shadcn format of extracting values out of hsl code to support tailwind opacity values like bg-primary/90 etc  */
+  /* :root {
+    --primary: 269 61% 67%;
+    --text: 240 5% 96%;
+    --secondary: 240 5% 65%;
+    --background: 240 10% 4%;
+    --card: 240 6% 10%;
+    --input: 240 3% 34%;
+    --info: 206 92% 69%;
+    --info-foreground: 210 78% 16%;
+    --warning: 35 100% 50%;
+    --warning-foreground: 28 100% 11%;
+    --danger: 357 100% 67%;
+    --danger-foreground: 353 68% 16%;
+    --success: 144 100% 40%;
+    --success-foreground: 133 100% 10%;
+  } */
+
+  .dark {
+    /* --primary: 269 61% 67%;
+    --text: 240 5% 96%;
+    --secondary: 240 5% 65%;
+    --background: 240 10% 4%; */
+    --card: 240 6% 10%;
+    --input: 240 3% 34%;
+    --info: 206 92% 69%;
+    --info-foreground: 210 78% 16%;
+    --warning: 35 100% 50%;
+    --warning-foreground: 28 100% 11%;
+    --danger: 357 100% 67%;
+    --danger-foreground: 353 68% 16%;
+    --success: 144 100% 40%;
+    --success-foreground: 133 100% 10%;
+    --popover: 0 0% 5%;
+    --pink: 289 68 82;
+    --indigo: 185 100% 74;
+  }
+
+  html {
+    @apply scroll-smooth bg-background text-text antialiased;
+  }
+
+  * {
+    @apply border-secondary/10 outline-offset-4;
+  }
+}
+
+/* .green-tag {
+  @apply text-success hover:text-success/80;
+}
+
+.purple-tag {
+  @apply text-primary hover:text-primary/80;
+}
+
+.blue-tag {
+  @apply text-info hover:text-info/80;
+}
+
+.red-tag {
+  @apply text-danger hover:text-danger/80;
+}
+
+.yellow-tag {
+  @apply text-warning hover:text-warning/80;
+}
+
+.pink-tag {
+  @apply text-pink hover:text-pink/80;
+}
+
+.indigo-tag {
+  @apply text-indigo hover:text-indigo/80;
+} */
+
+/* shadcn dropdown hides scroll when it's open */
+body[data-scroll-locked] #main-header {
+  padding-right: var(--removed-body-scroll-bar-size);
+}
+
+img {
+  object-fit: cover;
+}
