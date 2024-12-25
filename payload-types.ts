@@ -78,6 +78,9 @@ export interface UserAuthOperations {
 export interface User {
   id: number;
   displayName?: string | null;
+  /**
+   * Contains only lowercase letters, numbers, and dashes.
+   */
   username: string;
   imageUrl?: (number | null) | Media;
   role: ('admin' | 'waiter' | 'user')[];
@@ -147,15 +150,21 @@ export interface Media {
 export interface Page {
   id: number;
   title: string;
-  layout?: HomeType[] | null;
+  layout?: (ListType | FormType)[] | null;
   meta?: {
     title?: string | null;
     description?: string | null;
+    /**
+     * Maximum upload file size: 12MB. Recommended file size for images is <500KB.
+     */
     image?: (number | null) | Media;
   };
   isHome?: boolean | null;
   isDynamic?: boolean | null;
   slugMode?: ('generate' | 'custom') | null;
+  /**
+   * Contains only lowercase letters, numbers, and dashes.
+   */
   slug?: string | null;
   pathMode?: ('generate' | 'custom') | null;
   path?: string | null;
@@ -174,48 +183,27 @@ export interface Page {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "HomeType".
+ * via the `definition` "ListType".
  */
-export interface HomeType {
-  heading?: string | null;
-  subHeading?: string | null;
+export interface ListType {
+  collectionSlug: 'foodItems';
   id?: string | null;
   blockName?: string | null;
-  blockType: 'Home';
+  blockType: 'List';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "foodItems".
+ * via the `definition` "FormType".
  */
-export interface FoodItem {
-  id: number;
-  name: string;
-  description?: string | null;
-  type: 'veg' | 'nonVeg';
-  categories?: (number | Category)[] | null;
-  price: number;
-  special: boolean;
-  gallery?: (number | Media)[] | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "categories".
- */
-export interface Category {
-  id: number;
-  image?: (number | null) | Media;
-  name: string;
-  description: string;
-  meta?: {
-    title?: string | null;
-    description?: string | null;
-    image?: (number | null) | Media;
+export interface FormType {
+  title: string;
+  form: {
+    relationTo: 'forms';
+    value: number | Form;
   };
-  slug: string;
-  updatedAt: string;
-  createdAt: string;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'FormBlock';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -314,6 +302,9 @@ export interface Form {
       )[]
     | null;
   submitButtonLabel?: string | null;
+  /**
+   * Choose whether to display an on-page message or redirect to a different page after they submit the form.
+   */
   confirmationType?: ('message' | 'redirect') | null;
   confirmationMessage?:
     | {
@@ -323,6 +314,9 @@ export interface Form {
   redirect?: {
     url: string;
   };
+  /**
+   * Send custom emails when the form submits. Use comma separated lists to send the same email to multiple recipients. To reference a value from this form, wrap that field's name with double curly brackets, i.e. {{firstName}}. You can use a wildcard {{*}} to output all data and {{*:table}} to format it as an HTML table in the email.
+   */
   emails?:
     | {
         emailTo?: string | null;
@@ -331,6 +325,9 @@ export interface Form {
         replyTo?: string | null;
         emailFrom?: string | null;
         subject: string;
+        /**
+         * Enter the message that should be sent in this email.
+         */
         message?:
           | {
               [k: string]: unknown;
@@ -339,6 +336,49 @@ export interface Form {
         id?: string | null;
       }[]
     | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "foodItems".
+ */
+export interface FoodItem {
+  id: number;
+  name: string;
+  description?: string | null;
+  type: 'veg' | 'nonVeg';
+  categories?: (number | Category)[] | null;
+  price: number;
+  special: boolean;
+  gallery?: (number | Media)[] | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "categories".
+ */
+export interface Category {
+  id: number;
+  /**
+   * Upload tag image
+   */
+  image?: (number | null) | Media;
+  name: string;
+  description: string;
+  meta?: {
+    title?: string | null;
+    description?: string | null;
+    /**
+     * Maximum upload file size: 12MB. Recommended file size for images is <500KB.
+     */
+    image?: (number | null) | Media;
+  };
+  /**
+   * Contains only lowercase letters, numbers, and dashes.
+   */
+  slug: string;
   updatedAt: string;
   createdAt: string;
 }
@@ -467,14 +507,8 @@ export interface PagesSelect<T extends boolean = true> {
   layout?:
     | T
     | {
-        Home?:
-          | T
-          | {
-              heading?: T;
-              subHeading?: T;
-              id?: T;
-              blockName?: T;
-            };
+        List?: T | ListTypeSelect<T>;
+        FormBlock?: T | FormTypeSelect<T>;
       };
   meta?:
     | T
@@ -501,6 +535,25 @@ export interface PagesSelect<T extends boolean = true> {
   updatedAt?: T;
   createdAt?: T;
   _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ListType_select".
+ */
+export interface ListTypeSelect<T extends boolean = true> {
+  collectionSlug?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "FormType_select".
+ */
+export interface FormTypeSelect<T extends boolean = true> {
+  title?: T;
+  form?: T;
+  id?: T;
+  blockName?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -767,7 +820,13 @@ export interface SiteSetting {
   general: {
     title: string;
     description: string;
+    /**
+     * We recommend a maximum size of 256 * 256 pixels
+     */
     faviconUrl: number | Media;
+    /**
+     * We recommend a maximum size of 1200 * 630 pixels
+     */
     ogImageUrl: number | Media;
     keywords?: string[] | null;
   };
@@ -775,10 +834,16 @@ export interface SiteSetting {
     logo: BrandLogo;
     menuLinks?:
       | {
+          /**
+           * Check to create group of links
+           */
           group?: boolean | null;
           menuLink?: {
             type?: ('reference' | 'custom') | null;
             newTab?: boolean | null;
+            /**
+             * Upload an svg or logo to be displayed with link
+             */
             icon?: (number | null) | Media;
             label: string;
             page?: {
@@ -794,6 +859,9 @@ export interface SiteSetting {
               | {
                   type?: ('reference' | 'custom') | null;
                   newTab?: boolean | null;
+                  /**
+                   * Upload an svg or logo to be displayed with link
+                   */
                   icon?: (number | null) | Media;
                   label: string;
                   page?: {
@@ -813,10 +881,16 @@ export interface SiteSetting {
     logo: BrandLogo;
     footerLinks?:
       | {
+          /**
+           * Check to create group of links
+           */
           group?: boolean | null;
           menuLink?: {
             type?: ('reference' | 'custom') | null;
             newTab?: boolean | null;
+            /**
+             * Upload an svg or logo to be displayed with link
+             */
             icon?: (number | null) | Media;
             label: string;
             page?: {
@@ -832,6 +906,9 @@ export interface SiteSetting {
               | {
                   type?: ('reference' | 'custom') | null;
                   newTab?: boolean | null;
+                  /**
+                   * Upload an svg or logo to be displayed with link
+                   */
                   icon?: (number | null) | Media;
                   label: string;
                   page?: {
@@ -910,8 +987,17 @@ export interface SiteSetting {
  */
 export interface BrandLogo {
   imageUrl: number | Media;
+  /**
+   * Adjust to the height of the logo
+   */
   height?: number | null;
+  /**
+   * Adjust to the width of the logo
+   */
   width?: number | null;
+  /**
+   * This text appears below the footer image
+   */
   description?: string | null;
 }
 /**
@@ -931,13 +1017,7 @@ export interface SiteSettingsSelect<T extends boolean = true> {
   navbar?:
     | T
     | {
-        logo?:
-          | T
-          | {
-              imageUrl?: T;
-              height?: T;
-              width?: T;
-            };
+        logo?: T | BrandLogoSelect<T>;
         menuLinks?:
           | T
           | {
@@ -975,14 +1055,7 @@ export interface SiteSettingsSelect<T extends boolean = true> {
   footer?:
     | T
     | {
-        logo?:
-          | T
-          | {
-              imageUrl?: T;
-              height?: T;
-              width?: T;
-              description?: T;
-            };
+        logo?: T | BrandLogoSelect<T>;
         footerLinks?:
           | T
           | {
@@ -1069,6 +1142,16 @@ export interface SiteSettingsSelect<T extends boolean = true> {
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "BrandLogo_select".
+ */
+export interface BrandLogoSelect<T extends boolean = true> {
+  imageUrl?: T;
+  height?: T;
+  width?: T;
+  description?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

@@ -173,7 +173,7 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   await db.run(sql`CREATE INDEX \`food_items_updated_at_idx\` ON \`food_items\` (\`updated_at\`);`)
   await db.run(sql`CREATE INDEX \`food_items_created_at_idx\` ON \`food_items\` (\`created_at\`);`)
   await db.run(sql`CREATE TABLE \`food_items_rels\` (
-  	\`id\` integer PRIMARY KEY AUTOINCREMENT NOT NULL,
+  	\`id\` integer PRIMARY KEY NOT NULL,
   	\`order\` integer,
   	\`parent_id\` integer NOT NULL,
   	\`path\` text NOT NULL,
@@ -453,7 +453,7 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   await db.run(sql`CREATE INDEX \`payload_locked_documents_updated_at_idx\` ON \`payload_locked_documents\` (\`updated_at\`);`)
   await db.run(sql`CREATE INDEX \`payload_locked_documents_created_at_idx\` ON \`payload_locked_documents\` (\`created_at\`);`)
   await db.run(sql`CREATE TABLE \`payload_locked_documents_rels\` (
-  	\`id\` integer PRIMARY KEY AUTOINCREMENT NOT NULL,
+  	\`id\` integer PRIMARY KEY NOT NULL,
   	\`order\` integer,
   	\`parent_id\` integer NOT NULL,
   	\`path\` text NOT NULL,
@@ -496,7 +496,7 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   await db.run(sql`CREATE INDEX \`payload_preferences_updated_at_idx\` ON \`payload_preferences\` (\`updated_at\`);`)
   await db.run(sql`CREATE INDEX \`payload_preferences_created_at_idx\` ON \`payload_preferences\` (\`created_at\`);`)
   await db.run(sql`CREATE TABLE \`payload_preferences_rels\` (
-  	\`id\` integer PRIMARY KEY AUTOINCREMENT NOT NULL,
+  	\`id\` integer PRIMARY KEY NOT NULL,
   	\`order\` integer,
   	\`parent_id\` integer NOT NULL,
   	\`path\` text NOT NULL,
@@ -646,7 +646,7 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   await db.run(sql`CREATE INDEX \`site_settings_theme_settings_fonts_display_theme_settings_fonts_display_custom_font_idx\` ON \`site_settings\` (\`theme_settings_fonts_display_custom_font_id\`);`)
   await db.run(sql`CREATE INDEX \`site_settings_theme_settings_fonts_body_theme_settings_fonts_body_custom_font_idx\` ON \`site_settings\` (\`theme_settings_fonts_body_custom_font_id\`);`)
   await db.run(sql`CREATE TABLE \`site_settings_texts\` (
-  	\`id\` integer PRIMARY KEY AUTOINCREMENT NOT NULL,
+  	\`id\` integer PRIMARY KEY NOT NULL,
   	\`order\` integer NOT NULL,
   	\`parent_id\` integer NOT NULL,
   	\`path\` text NOT NULL,
@@ -656,7 +656,7 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   `)
   await db.run(sql`CREATE INDEX \`site_settings_texts_order_parent_idx\` ON \`site_settings_texts\` (\`order\`,\`parent_id\`);`)
   await db.run(sql`CREATE TABLE \`site_settings_rels\` (
-  	\`id\` integer PRIMARY KEY AUTOINCREMENT NOT NULL,
+  	\`id\` integer PRIMARY KEY NOT NULL,
   	\`order\` integer,
   	\`parent_id\` integer NOT NULL,
   	\`path\` text NOT NULL,

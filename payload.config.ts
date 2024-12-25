@@ -8,7 +8,9 @@ import { fileURLToPath } from 'url'
 
 import { ResetPassword } from '@/emails/reset-password'
 import { UserAccountVerification } from '@/emails/verify-email'
+import { blocksConfig } from '@/payload/blocks/blockConfig'
 import { revalidatePages } from '@/payload/hooks/revalidatePages'
+import { revalidateSiteSettings } from '@/payload/hooks/revalidateSiteSettings'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -53,7 +55,7 @@ export default cqlConfig({
     outputFile: path.resolve(dirname, 'payload-types.ts'),
   },
 
-  blocks: [],
+  blocks: blocksConfig,
 
   collections: [
     {
@@ -89,6 +91,17 @@ export default cqlConfig({
       },
     },
   ],
+
+  globals: [
+    {
+      slug: collectionSlug['site-settings'],
+      fields: [],
+      hooks: {
+        afterChange: [revalidateSiteSettings],
+      },
+    },
+  ],
+
   editor: slateEditor({
     admin: {
       leaves: [

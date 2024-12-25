@@ -3,8 +3,7 @@ import { unstable_cache } from 'next/cache'
 import { headers } from 'next/headers'
 import { getPayload } from 'payload'
 
-import Branding from '@/components/Branding'
-import Footer from '@/components/Footer'
+// import Footer from '@/components/Footer'
 import Navbar from '@/components/Navbar'
 import { getCurrentUser } from '@/utils/getCurrentUser'
 import { MetadataProvider } from '@/utils/metadataContext'
@@ -37,8 +36,7 @@ const MarketingLayout = async ({ children }: { children: React.ReactNode }) => {
       <div className='grid min-h-screen w-full grid-rows-[1fr_auto]'>
         <Navbar metadata={metadata} user={user} />
         <main className='container my-20'>{children}</main>
-        <Footer metadata={metadata} />
-        <Branding />
+        {/* <Footer metadata={metadata} /> */}
       </div>
     </MetadataProvider>
   )

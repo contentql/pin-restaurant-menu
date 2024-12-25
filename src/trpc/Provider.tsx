@@ -5,10 +5,12 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { httpBatchLink } from '@trpc/client'
 import { KBarProvider } from 'kbar'
 import { AppProgressBar as ProgressBar } from 'next-nprogress-bar'
+import { NuqsAdapter } from 'nuqs/adapters/next/app'
 import React, { useState } from 'react'
 import SuperJSON from 'superjson'
 
 import { trpc } from '@/trpc/client'
+import { FiltersProvider } from '@/utils/filtersContext'
 
 export default function Provider({ children }: { children: React.ReactNode }) {
   const [queryClient] = useState(
@@ -43,7 +45,11 @@ export default function Provider({ children }: { children: React.ReactNode }) {
           color='#A978DE'
           options={{ showSpinner: false }}
         />
-        <KBarProvider>{children}</KBarProvider>
+        <NuqsAdapter>
+          <KBarProvider>
+            <FiltersProvider>{children}</FiltersProvider>
+          </KBarProvider>
+        </NuqsAdapter>
         <ReactQueryDevtools initialIsOpen={false} />
       </QueryClientProvider>
     </trpc.Provider>

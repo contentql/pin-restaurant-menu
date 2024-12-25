@@ -14,7 +14,7 @@ const config: Config = {
       center: true,
       padding: '1rem',
       screens: {
-        '2xl': '1280px',
+        sm: '680px',
       },
     },
     extend: {
@@ -50,6 +50,11 @@ const config: Config = {
       },
       borderRadius: {
         DEFAULT: 'var(--border-radius)',
+        none: `0rem`,
+        sm: `0.75rem`,
+        md: `1rem`,
+        lg: `1.5rem`,
+        full: `999rem`,
       },
       fontSize: {
         xs: '0.8rem',
