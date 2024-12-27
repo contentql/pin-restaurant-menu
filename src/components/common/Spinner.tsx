@@ -6,7 +6,7 @@ const Spinner = ({ className = '' }: { className?: string }) => {
       <svg
         aria-hidden='true'
         className={cn(
-          'size-5 animate-spin fill-text text-background',
+          'fill-primary text-foreground size-5 animate-spin',
           className,
         )}
         viewBox='0 0 100 101'

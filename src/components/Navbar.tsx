@@ -44,7 +44,7 @@ const Navbar = ({ metadata }: { metadata: SiteSetting; user: User | null }) => {
   return (
     <header
       id='main-header'
-      className='fixed left-0 top-0 z-[60] w-full bg-popover/50 shadow-sm'>
+      className='fixed left-0 top-0 z-50 w-full bg-background shadow-sm'>
       <div className='container flex h-14 items-center justify-between'>
         {logoDetails.url && (
           <div className='flex-1'>

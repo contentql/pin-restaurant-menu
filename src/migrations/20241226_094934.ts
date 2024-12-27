@@ -36,20 +36,32 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   await db.run(sql`CREATE INDEX \`users_updated_at_idx\` ON \`users\` (\`updated_at\`);`)
   await db.run(sql`CREATE INDEX \`users_created_at_idx\` ON \`users\` (\`created_at\`);`)
   await db.run(sql`CREATE UNIQUE INDEX \`users_email_idx\` ON \`users\` (\`email\`);`)
-  await db.run(sql`CREATE TABLE \`pages_blocks_home\` (
+  await db.run(sql`CREATE TABLE \`pages_blocks_list\` (
   	\`_order\` integer NOT NULL,
   	\`_parent_id\` integer NOT NULL,
   	\`_path\` text NOT NULL,
   	\`id\` text PRIMARY KEY NOT NULL,
-  	\`heading\` text,
-  	\`sub_heading\` text,
+  	\`collection_slug\` text,
   	\`block_name\` text,
   	FOREIGN KEY (\`_parent_id\`) REFERENCES \`pages\`(\`id\`) ON UPDATE no action ON DELETE cascade
   );
   `)
-  await db.run(sql`CREATE INDEX \`pages_blocks_home_order_idx\` ON \`pages_blocks_home\` (\`_order\`);`)
-  await db.run(sql`CREATE INDEX \`pages_blocks_home_parent_id_idx\` ON \`pages_blocks_home\` (\`_parent_id\`);`)
-  await db.run(sql`CREATE INDEX \`pages_blocks_home_path_idx\` ON \`pages_blocks_home\` (\`_path\`);`)
+  await db.run(sql`CREATE INDEX \`pages_blocks_list_order_idx\` ON \`pages_blocks_list\` (\`_order\`);`)
+  await db.run(sql`CREATE INDEX \`pages_blocks_list_parent_id_idx\` ON \`pages_blocks_list\` (\`_parent_id\`);`)
+  await db.run(sql`CREATE INDEX \`pages_blocks_list_path_idx\` ON \`pages_blocks_list\` (\`_path\`);`)
+  await db.run(sql`CREATE TABLE \`pages_blocks_form_block\` (
+  	\`_order\` integer NOT NULL,
+  	\`_parent_id\` integer NOT NULL,
+  	\`_path\` text NOT NULL,
+  	\`id\` text PRIMARY KEY NOT NULL,
+  	\`title\` text,
+  	\`block_name\` text,
+  	FOREIGN KEY (\`_parent_id\`) REFERENCES \`pages\`(\`id\`) ON UPDATE no action ON DELETE cascade
+  );
+  `)
+  await db.run(sql`CREATE INDEX \`pages_blocks_form_block_order_idx\` ON \`pages_blocks_form_block\` (\`_order\`);`)
+  await db.run(sql`CREATE INDEX \`pages_blocks_form_block_parent_id_idx\` ON \`pages_blocks_form_block\` (\`_parent_id\`);`)
+  await db.run(sql`CREATE INDEX \`pages_blocks_form_block_path_idx\` ON \`pages_blocks_form_block\` (\`_path\`);`)
   await db.run(sql`CREATE TABLE \`pages_breadcrumbs\` (
   	\`_order\` integer NOT NULL,
   	\`_parent_id\` integer NOT NULL,
@@ -92,21 +104,48 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   await db.run(sql`CREATE INDEX \`pages_updated_at_idx\` ON \`pages\` (\`updated_at\`);`)
   await db.run(sql`CREATE INDEX \`pages_created_at_idx\` ON \`pages\` (\`created_at\`);`)
   await db.run(sql`CREATE INDEX \`pages__status_idx\` ON \`pages\` (\`_status\`);`)
-  await db.run(sql`CREATE TABLE \`_pages_v_blocks_home\` (
+  await db.run(sql`CREATE TABLE \`pages_rels\` (
+  	\`id\` integer PRIMARY KEY NOT NULL,
+  	\`order\` integer,
+  	\`parent_id\` integer NOT NULL,
+  	\`path\` text NOT NULL,
+  	\`forms_id\` integer,
+  	FOREIGN KEY (\`parent_id\`) REFERENCES \`pages\`(\`id\`) ON UPDATE no action ON DELETE cascade,
+  	FOREIGN KEY (\`forms_id\`) REFERENCES \`forms\`(\`id\`) ON UPDATE no action ON DELETE cascade
+  );
+  `)
+  await db.run(sql`CREATE INDEX \`pages_rels_order_idx\` ON \`pages_rels\` (\`order\`);`)
+  await db.run(sql`CREATE INDEX \`pages_rels_parent_idx\` ON \`pages_rels\` (\`parent_id\`);`)
+  await db.run(sql`CREATE INDEX \`pages_rels_path_idx\` ON \`pages_rels\` (\`path\`);`)
+  await db.run(sql`CREATE INDEX \`pages_rels_forms_id_idx\` ON \`pages_rels\` (\`forms_id\`);`)
+  await db.run(sql`CREATE TABLE \`_pages_v_blocks_list\` (
   	\`_order\` integer NOT NULL,
   	\`_parent_id\` integer NOT NULL,
   	\`_path\` text NOT NULL,
   	\`id\` integer PRIMARY KEY NOT NULL,
-  	\`heading\` text,
-  	\`sub_heading\` text,
+  	\`collection_slug\` text,
   	\`_uuid\` text,
   	\`block_name\` text,
   	FOREIGN KEY (\`_parent_id\`) REFERENCES \`_pages_v\`(\`id\`) ON UPDATE no action ON DELETE cascade
   );
   `)
-  await db.run(sql`CREATE INDEX \`_pages_v_blocks_home_order_idx\` ON \`_pages_v_blocks_home\` (\`_order\`);`)
-  await db.run(sql`CREATE INDEX \`_pages_v_blocks_home_parent_id_idx\` ON \`_pages_v_blocks_home\` (\`_parent_id\`);`)
-  await db.run(sql`CREATE INDEX \`_pages_v_blocks_home_path_idx\` ON \`_pages_v_blocks_home\` (\`_path\`);`)
+  await db.run(sql`CREATE INDEX \`_pages_v_blocks_list_order_idx\` ON \`_pages_v_blocks_list\` (\`_order\`);`)
+  await db.run(sql`CREATE INDEX \`_pages_v_blocks_list_parent_id_idx\` ON \`_pages_v_blocks_list\` (\`_parent_id\`);`)
+  await db.run(sql`CREATE INDEX \`_pages_v_blocks_list_path_idx\` ON \`_pages_v_blocks_list\` (\`_path\`);`)
+  await db.run(sql`CREATE TABLE \`_pages_v_blocks_form_block\` (
+  	\`_order\` integer NOT NULL,
+  	\`_parent_id\` integer NOT NULL,
+  	\`_path\` text NOT NULL,
+  	\`id\` integer PRIMARY KEY NOT NULL,
+  	\`title\` text,
+  	\`_uuid\` text,
+  	\`block_name\` text,
+  	FOREIGN KEY (\`_parent_id\`) REFERENCES \`_pages_v\`(\`id\`) ON UPDATE no action ON DELETE cascade
+  );
+  `)
+  await db.run(sql`CREATE INDEX \`_pages_v_blocks_form_block_order_idx\` ON \`_pages_v_blocks_form_block\` (\`_order\`);`)
+  await db.run(sql`CREATE INDEX \`_pages_v_blocks_form_block_parent_id_idx\` ON \`_pages_v_blocks_form_block\` (\`_parent_id\`);`)
+  await db.run(sql`CREATE INDEX \`_pages_v_blocks_form_block_path_idx\` ON \`_pages_v_blocks_form_block\` (\`_path\`);`)
   await db.run(sql`CREATE TABLE \`_pages_v_version_breadcrumbs\` (
   	\`_order\` integer NOT NULL,
   	\`_parent_id\` integer NOT NULL,
@@ -159,6 +198,20 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   await db.run(sql`CREATE INDEX \`_pages_v_created_at_idx\` ON \`_pages_v\` (\`created_at\`);`)
   await db.run(sql`CREATE INDEX \`_pages_v_updated_at_idx\` ON \`_pages_v\` (\`updated_at\`);`)
   await db.run(sql`CREATE INDEX \`_pages_v_latest_idx\` ON \`_pages_v\` (\`latest\`);`)
+  await db.run(sql`CREATE TABLE \`_pages_v_rels\` (
+  	\`id\` integer PRIMARY KEY NOT NULL,
+  	\`order\` integer,
+  	\`parent_id\` integer NOT NULL,
+  	\`path\` text NOT NULL,
+  	\`forms_id\` integer,
+  	FOREIGN KEY (\`parent_id\`) REFERENCES \`_pages_v\`(\`id\`) ON UPDATE no action ON DELETE cascade,
+  	FOREIGN KEY (\`forms_id\`) REFERENCES \`forms\`(\`id\`) ON UPDATE no action ON DELETE cascade
+  );
+  `)
+  await db.run(sql`CREATE INDEX \`_pages_v_rels_order_idx\` ON \`_pages_v_rels\` (\`order\`);`)
+  await db.run(sql`CREATE INDEX \`_pages_v_rels_parent_idx\` ON \`_pages_v_rels\` (\`parent_id\`);`)
+  await db.run(sql`CREATE INDEX \`_pages_v_rels_path_idx\` ON \`_pages_v_rels\` (\`path\`);`)
+  await db.run(sql`CREATE INDEX \`_pages_v_rels_forms_id_idx\` ON \`_pages_v_rels\` (\`forms_id\`);`)
   await db.run(sql`CREATE TABLE \`food_items\` (
   	\`id\` integer PRIMARY KEY NOT NULL,
   	\`name\` text NOT NULL,
@@ -612,22 +665,26 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   	\`footer_logo_width\` numeric,
   	\`footer_logo_description\` text,
   	\`footer_copyright\` text,
-  	\`theme_settings_light_mode_background\` text DEFAULT '#000000' NOT NULL,
-  	\`theme_settings_light_mode_text\` text DEFAULT '#000000' NOT NULL,
-  	\`theme_settings_light_mode_secondary\` text DEFAULT '#000000' NOT NULL,
-  	\`theme_settings_light_mode_accent\` text DEFAULT '#000000' NOT NULL,
-  	\`theme_settings_dark_mode_background\` text DEFAULT '#000000' NOT NULL,
-  	\`theme_settings_dark_mode_text\` text DEFAULT '#000000' NOT NULL,
-  	\`theme_settings_dark_mode_secondary\` text DEFAULT '#000000' NOT NULL,
-  	\`theme_settings_dark_mode_accent\` text DEFAULT '#000000' NOT NULL,
+  	\`theme_settings_light_mode_primary\` text DEFAULT '#C084FC' NOT NULL,
+  	\`theme_settings_light_mode_background\` text DEFAULT '#F8FAFC' NOT NULL,
+  	\`theme_settings_light_mode_text\` text DEFAULT '#0F0F0F' NOT NULL,
+  	\`theme_settings_light_mode_foreground\` text DEFAULT '#E2E8F0' NOT NULL,
+  	\`theme_settings_light_mode_popover\` text DEFAULT '#000000' NOT NULL,
+  	\`theme_settings_light_mode_border\` text DEFAULT '#000000' NOT NULL,
+  	\`theme_settings_dark_mode_primary\` text DEFAULT '#60A5FA' NOT NULL,
+  	\`theme_settings_dark_mode_background\` text DEFAULT '#0F172A' NOT NULL,
+  	\`theme_settings_dark_mode_text\` text DEFAULT '#FFFAFA' NOT NULL,
+  	\`theme_settings_dark_mode_foreground\` text DEFAULT '#1E293B' NOT NULL,
+  	\`theme_settings_dark_mode_popover\` text DEFAULT '#000000' NOT NULL,
+  	\`theme_settings_dark_mode_border\` text DEFAULT '#000000' NOT NULL,
   	\`theme_settings_fonts_display_type\` text DEFAULT 'googleFont' NOT NULL,
   	\`theme_settings_fonts_display_custom_font_id\` integer,
-  	\`theme_settings_fonts_display_remote_font\` text,
-  	\`theme_settings_fonts_display_font_name\` text,
+  	\`theme_settings_fonts_display_remote_font\` text DEFAULT 'https://fonts.googleapis.com/css2?family=Chewy&display=swap',
+  	\`theme_settings_fonts_display_font_name\` text DEFAULT 'Chewy',
   	\`theme_settings_fonts_body_type\` text DEFAULT 'googleFont' NOT NULL,
   	\`theme_settings_fonts_body_custom_font_id\` integer,
-  	\`theme_settings_fonts_body_remote_font\` text,
-  	\`theme_settings_fonts_body_font_name\` text,
+  	\`theme_settings_fonts_body_remote_font\` text DEFAULT 'https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap',
+  	\`theme_settings_fonts_body_font_name\` text DEFAULT 'Roboto',
   	\`theme_settings_radius\` text DEFAULT 'none' NOT NULL,
   	\`updated_at\` text,
   	\`created_at\` text,
@@ -674,12 +731,16 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
 export async function down({ db, payload, req }: MigrateDownArgs): Promise<void> {
   await db.run(sql`DROP TABLE \`users_role\`;`)
   await db.run(sql`DROP TABLE \`users\`;`)
-  await db.run(sql`DROP TABLE \`pages_blocks_home\`;`)
+  await db.run(sql`DROP TABLE \`pages_blocks_list\`;`)
+  await db.run(sql`DROP TABLE \`pages_blocks_form_block\`;`)
   await db.run(sql`DROP TABLE \`pages_breadcrumbs\`;`)
   await db.run(sql`DROP TABLE \`pages\`;`)
-  await db.run(sql`DROP TABLE \`_pages_v_blocks_home\`;`)
+  await db.run(sql`DROP TABLE \`pages_rels\`;`)
+  await db.run(sql`DROP TABLE \`_pages_v_blocks_list\`;`)
+  await db.run(sql`DROP TABLE \`_pages_v_blocks_form_block\`;`)
   await db.run(sql`DROP TABLE \`_pages_v_version_breadcrumbs\`;`)
   await db.run(sql`DROP TABLE \`_pages_v\`;`)
+  await db.run(sql`DROP TABLE \`_pages_v_rels\`;`)
   await db.run(sql`DROP TABLE \`food_items\`;`)
   await db.run(sql`DROP TABLE \`food_items_rels\`;`)
   await db.run(sql`DROP TABLE \`categories\`;`)

@@ -1,6 +1,8 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@import 'swiper/css';
+@import 'swiper/css/pagination';
 
 /* 
   hex-codes:
@@ -70,34 +72,6 @@
   }
 }
 
-/* .green-tag {
-  @apply text-success hover:text-success/80;
-}
-
-.purple-tag {
-  @apply text-primary hover:text-primary/80;
-}
-
-.blue-tag {
-  @apply text-info hover:text-info/80;
-}
-
-.red-tag {
-  @apply text-danger hover:text-danger/80;
-}
-
-.yellow-tag {
-  @apply text-warning hover:text-warning/80;
-}
-
-.pink-tag {
-  @apply text-pink hover:text-pink/80;
-}
-
-.indigo-tag {
-  @apply text-indigo hover:text-indigo/80;
-} */
-
 /* shadcn dropdown hides scroll when it's open */
 body[data-scroll-locked] #main-header {
   padding-right: var(--removed-body-scroll-bar-size);
@@ -108,9 +82,9 @@ img {
 }
 
 .swiper-pagination .swiper-pagination-bullet {
-  @apply bg-secondary;
+  @apply bg-foreground;
 }
 
 .swiper-pagination .swiper-pagination-bullet-active {
-  @apply bg-accent;
+  @apply bg-primary;
 }

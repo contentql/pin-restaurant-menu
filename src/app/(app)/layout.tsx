@@ -158,8 +158,8 @@ export default async function RootLayout({
         {
           '--background': hexToHsl(lightMode.background),
           '--text': hexToHsl(lightMode.text),
-          '--secondary': hexToHsl(lightMode.secondary),
-          '--accent': hexToHsl(lightMode.accent),
+          '--foreground': hexToHsl(lightMode.foreground),
+          '--primary': hexToHsl(lightMode.primary),
           '--font-display': `${displayFont?.fontName ?? ''}, sans-serif`,
           '--font-body': `${bodyFont?.fontName ?? ''}, sans-serif`,
           '--border-radius': `${borderRadius[radius]}rem`,

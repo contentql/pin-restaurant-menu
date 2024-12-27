@@ -951,16 +951,20 @@ export interface SiteSetting {
   };
   themeSettings: {
     lightMode: {
+      primary: string;
       background: string;
       text: string;
-      secondary: string;
-      accent: string;
+      foreground: string;
+      popover: string;
+      border: string;
     };
     darkMode: {
+      primary: string;
       background: string;
       text: string;
-      secondary: string;
-      accent: string;
+      foreground: string;
+      popover: string;
+      border: string;
     };
     fonts: {
       display: {
@@ -1104,18 +1108,22 @@ export interface SiteSettingsSelect<T extends boolean = true> {
         lightMode?:
           | T
           | {
+              primary?: T;
               background?: T;
               text?: T;
-              secondary?: T;
-              accent?: T;
+              foreground?: T;
+              popover?: T;
+              border?: T;
             };
         darkMode?:
           | T
           | {
+              primary?: T;
               background?: T;
               text?: T;
-              secondary?: T;
-              accent?: T;
+              foreground?: T;
+              popover?: T;
+              border?: T;
             };
         fonts?:
           | T

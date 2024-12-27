@@ -1,7 +1,5 @@
-import { collectionSlug } from '@contentql/core'
 import { cqlConfig } from '@contentql/core/restaurant'
 import { env } from '@env'
-import { sqliteAdapter } from '@payloadcms/db-sqlite'
 import { slateEditor } from '@payloadcms/richtext-slate'
 import path from 'path'
 import { fileURLToPath } from 'url'
@@ -31,12 +29,6 @@ export default cqlConfig({
 
   secret: env.PAYLOAD_SECRET,
 
-  db: sqliteAdapter({
-    client: {
-      url: env.DATABASE_URI,
-    },
-  }),
-
   s3: {
     accessKeyId: env.S3_ACCESS_KEY_ID,
     bucket: env.S3_BUCKET,
@@ -59,7 +51,7 @@ export default cqlConfig({
 
   collections: [
     {
-      slug: collectionSlug.users,
+      slug: 'users',
       fields: [],
       auth: {
         verify: {
@@ -84,7 +76,7 @@ export default cqlConfig({
       },
     },
     {
-      slug: collectionSlug.pages,
+      slug: 'pages',
       fields: [],
       hooks: {
         afterChange: [revalidatePages],
@@ -94,7 +86,7 @@ export default cqlConfig({
 
   globals: [
     {
-      slug: collectionSlug['site-settings'],
+      slug: 'site-settings',
       fields: [],
       hooks: {
         afterChange: [revalidateSiteSettings],

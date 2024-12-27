@@ -1,7 +1,7 @@
 'use client'
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
+// import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { httpBatchLink } from '@trpc/client'
 import { KBarProvider } from 'kbar'
 import { AppProgressBar as ProgressBar } from 'next-nprogress-bar'
@@ -10,6 +10,7 @@ import React, { useState } from 'react'
 import SuperJSON from 'superjson'
 
 import { trpc } from '@/trpc/client'
+import { CartProvider } from '@/utils/cartContext'
 import { FiltersProvider } from '@/utils/filtersContext'
 
 export default function Provider({ children }: { children: React.ReactNode }) {
@@ -47,10 +48,12 @@ export default function Provider({ children }: { children: React.ReactNode }) {
         />
         <NuqsAdapter>
           <KBarProvider>
-            <FiltersProvider>{children}</FiltersProvider>
+            <FiltersProvider>
+              <CartProvider>{children}</CartProvider>
+            </FiltersProvider>
           </KBarProvider>
         </NuqsAdapter>
-        <ReactQueryDevtools initialIsOpen={false} />
+        {/* <ReactQueryDevtools initialIsOpen={false} /> */}
       </QueryClientProvider>
     </trpc.Provider>
   )

@@ -4661,13 +4661,21 @@
           "notNull": false,
           "autoincrement": false
         },
+        "theme_settings_light_mode_primary": {
+          "name": "theme_settings_light_mode_primary",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "'#C084FC'"
+        },
         "theme_settings_light_mode_background": {
           "name": "theme_settings_light_mode_background",
           "type": "text",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false,
-          "default": "'#000000'"
+          "default": "'#F8FAFC'"
         },
         "theme_settings_light_mode_text": {
           "name": "theme_settings_light_mode_text",
@@ -4675,23 +4683,39 @@
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false,
-          "default": "'#000000'"
+          "default": "'#0F0F0F'"
         },
-        "theme_settings_light_mode_secondary": {
-          "name": "theme_settings_light_mode_secondary",
+        "theme_settings_light_mode_foreground": {
+          "name": "theme_settings_light_mode_foreground",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "'#E2E8F0'"
+        },
+        "theme_settings_light_mode_popover": {
+          "name": "theme_settings_light_mode_popover",
           "type": "text",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false,
           "default": "'#000000'"
         },
-        "theme_settings_light_mode_accent": {
-          "name": "theme_settings_light_mode_accent",
+        "theme_settings_light_mode_border": {
+          "name": "theme_settings_light_mode_border",
           "type": "text",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false,
           "default": "'#000000'"
+        },
+        "theme_settings_dark_mode_primary": {
+          "name": "theme_settings_dark_mode_primary",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "'#60A5FA'"
         },
         "theme_settings_dark_mode_background": {
           "name": "theme_settings_dark_mode_background",
@@ -4699,7 +4723,7 @@
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false,
-          "default": "'#000000'"
+          "default": "'#0F172A'"
         },
         "theme_settings_dark_mode_text": {
           "name": "theme_settings_dark_mode_text",
@@ -4707,18 +4731,26 @@
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false,
-          "default": "'#000000'"
+          "default": "'#FFFAFA'"
         },
-        "theme_settings_dark_mode_secondary": {
-          "name": "theme_settings_dark_mode_secondary",
+        "theme_settings_dark_mode_foreground": {
+          "name": "theme_settings_dark_mode_foreground",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "'#1E293B'"
+        },
+        "theme_settings_dark_mode_popover": {
+          "name": "theme_settings_dark_mode_popover",
           "type": "text",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false,
           "default": "'#000000'"
         },
-        "theme_settings_dark_mode_accent": {
-          "name": "theme_settings_dark_mode_accent",
+        "theme_settings_dark_mode_border": {
+          "name": "theme_settings_dark_mode_border",
           "type": "text",
           "primaryKey": false,
           "notNull": true,
@@ -4745,14 +4777,16 @@
           "type": "text",
           "primaryKey": false,
           "notNull": false,
-          "autoincrement": false
+          "autoincrement": false,
+          "default": "'https://fonts.googleapis.com/css2?family=Chewy&display=swap'"
         },
         "theme_settings_fonts_display_font_name": {
           "name": "theme_settings_fonts_display_font_name",
           "type": "text",
           "primaryKey": false,
           "notNull": false,
-          "autoincrement": false
+          "autoincrement": false,
+          "default": "'Chewy'"
         },
         "theme_settings_fonts_body_type": {
           "name": "theme_settings_fonts_body_type",
@@ -4774,14 +4808,16 @@
           "type": "text",
           "primaryKey": false,
           "notNull": false,
-          "autoincrement": false
+          "autoincrement": false,
+          "default": "'https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap'"
         },
         "theme_settings_fonts_body_font_name": {
           "name": "theme_settings_fonts_body_font_name",
           "type": "text",
           "primaryKey": false,
           "notNull": false,
-          "autoincrement": false
+          "autoincrement": false,
+          "default": "'Roboto'"
         },
         "theme_settings_radius": {
           "name": "theme_settings_radius",
@@ -5113,6 +5149,6 @@
   "internal": {
     "indexes": {}
   },
-  "id": "60300e13-2c6f-4e0b-b020-1a80bbd67709",
+  "id": "72001a5f-db50-4e08-baab-3c2578cfb4d3",
   "prevId": "00000000-0000-0000-0000-000000000000"
 }

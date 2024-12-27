@@ -21,8 +21,8 @@ const config: Config = {
       colors: {
         background: 'hsl(var(--background))',
         text: 'hsl(var(--text))',
-        secondary: 'hsl(var(--secondary))',
-        accent: 'hsl(var(--accent))',
+        foreground: 'hsl(var(--foreground))',
+        primary: 'hsl(var(--primary))',
 
         card: 'hsl(var(--card))',
         input: 'hsl(var(--input))',

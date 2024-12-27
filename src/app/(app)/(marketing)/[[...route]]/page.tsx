@@ -7,7 +7,7 @@ import { blocksJSX } from '@/payload/blocks/blocks'
 import { ensurePath } from '@/utils/ensurePath'
 import { matchNextJsPath } from '@/utils/matchNextJsPath'
 
-type StaticRoute = { route: string | string[] | null }
+// type StaticRoute = { route: string | string[] | null }
 export const dynamic = 'force-static'
 // revalidates every 10mins
 export const revalidate = 600
