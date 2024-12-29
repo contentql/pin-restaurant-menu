@@ -2,20 +2,6 @@ import { withPayload } from '@payloadcms/next/withPayload'
 import type { NextConfig } from 'next'
 
 const nextConfig: NextConfig = {
-  async redirects() {
-    return [
-      {
-        source: '/admin/login',
-        destination: '/sign-in',
-        permanent: false,
-      },
-      {
-        source: '/admin/create-first-user',
-        destination: '/sign-up',
-        permanent: false,
-      },
-    ]
-  },
   output: 'standalone',
   outputFileTracingIncludes: {
     '/public': ['./public/**/*'],

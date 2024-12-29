@@ -2,7 +2,7 @@
 
 import { ShoppingCart, X } from 'lucide-react'
 
-import { NonVegLogo, VegLogo } from '@/components/SVG'
+import { CartEmptyIcon, NonVegLogo, VegLogo } from '@/components/SVG'
 import Button from '@/components/common/Button'
 import {
   Drawer,
@@ -19,10 +19,40 @@ import OrderInput from './OrderInput'
 
 const Cart = () => {
   const { cartItems, setCartItems } = useCartContext()
+
+  // on quantity change updating the cart items count
+  const handleQuantityChange = ({
+    count,
+    itemIndex,
+  }: {
+    count: number
+    itemIndex: number
+  }) => {
+    // if quantity is 0 removing item from cart
+    if (count === 0) {
+      return setCartItems(current => {
+        let frontPart = current.slice(0, itemIndex)
+        let lastPart = current.slice(itemIndex + 1)
+
+        return [...frontPart, ...lastPart]
+      })
+    }
+
+    setCartItems(current =>
+      current.map((cartItem, i) => {
+        if (i === itemIndex) {
+          return { ...cartItem, quantity: count }
+        }
+
+        return cartItem
+      }),
+    )
+  }
+
   return (
     <Drawer>
       <DrawerTrigger asChild>
-        <Button className='fixed bottom-4 left-4 px-2.5'>
+        <Button className='px-2.5'>
           <ShoppingCart size={20} />
         </Button>
       </DrawerTrigger>
@@ -42,38 +72,53 @@ const Cart = () => {
             </DrawerClose>
           </DrawerHeader>
 
-          {cartItems.length
-            ? cartItems.map(({ name, price, quantity, type, id }) => {
-                return (
-                  <div className='flex justify-between text-sm' key={id}>
-                    <div className='flex items-center gap-2'>
-                      {type === 'nonVeg' ? (
-                        <NonVegLogo className='size-4 flex-shrink-0' />
-                      ) : (
-                        <VegLogo className='size-4 flex-shrink-0' />
-                      )}
-                      <span className='text-wrap'>{name}</span>
-                    </div>
-
-                    <div className='flex items-center gap-2'>
-                      <OrderInput
-                        size='small'
-                        count={quantity}
-                        setCount={() => {}}
-                      />
-                      <span className='text-nowrap font-semibold'>
-                        ₹ {quantity * price}
-                      </span>
-                    </div>
+          {cartItems.length ? (
+            cartItems.map(({ name, price, quantity, type, id }, index) => {
+              return (
+                <div className='flex justify-between text-sm' key={id}>
+                  <div className='flex items-center gap-2'>
+                    {type === 'nonVeg' ? (
+                      <NonVegLogo className='size-4 flex-shrink-0' />
+                    ) : (
+                      <VegLogo className='size-4 flex-shrink-0' />
+                    )}
+                    <span className='text-wrap'>{name}</span>
                   </div>
-                )
-              })
-            : null}
 
-          <DrawerFooter className='flex-row justify-between border-t border-dashed px-0 text-sm'>
-            <p>Total Bill:</p>
-            <span className='font-semibold'>₹ 350</span>
-          </DrawerFooter>
+                  <div className='flex items-center gap-2'>
+                    <OrderInput
+                      size='small'
+                      defaultValue={quantity}
+                      onChange={count => {
+                        handleQuantityChange({ count, itemIndex: index })
+                      }}
+                    />
+                    <span className='text-nowrap font-semibold'>
+                      ₹ {quantity * price}
+                    </span>
+                  </div>
+                </div>
+              )
+            })
+          ) : (
+            <div className='flex flex-col items-center justify-center pb-8'>
+              <CartEmptyIcon className='size-32' />
+              <p>Cart is Empty!</p>
+            </div>
+          )}
+
+          {cartItems.length ? (
+            <DrawerFooter className='flex-row justify-between border-t border-dashed px-0 text-sm'>
+              <p>Total Bill:</p>
+              <span className='font-semibold'>
+                ₹{' '}
+                {cartItems.reduce(
+                  (acc, current) => acc + current.price * current.quantity,
+                  0,
+                )}
+              </span>
+            </DrawerFooter>
+          ) : null}
         </div>
       </DrawerContent>
     </Drawer>

@@ -5,12 +5,9 @@ import { useDebouncedEffect } from '@payloadcms/ui'
 import { Heart, X } from 'lucide-react'
 import Image from 'next/image'
 import { useState } from 'react'
-// import 'swiper/css'
-// import 'swiper/css/pagination'
 import { Pagination } from 'swiper/modules'
 import { Swiper, SwiperSlide } from 'swiper/react'
 
-// Import Swiper styles
 import { NonVegLogo, VegLogo } from '@/components/SVG'
 import Button from '@/components/common/Button'
 import { DialogTitle } from '@/components/common/Dialog'
@@ -29,8 +26,9 @@ const FoodCard = ({ foodItem }: { foodItem: FoodItem }) => {
   const [open, setOpen] = useState(false)
   const [count, setCount] = useState(1)
   const [isPending, setIsPending] = useState(false)
-  const { setCartItems } = useCartContext()
+  const { setCartItems, setCollectionItems, collectionItems } = useCartContext()
 
+  // useDebouncedEffect hook will set loading state to false again after 300ms
   useDebouncedEffect(
     () => {
       if (isPending) {
@@ -41,7 +39,7 @@ const FoodCard = ({ foodItem }: { foodItem: FoodItem }) => {
     300,
   )
 
-  const { name, price, type, gallery, description, special } = foodItem
+  const { name, price, type, gallery, description, special, id } = foodItem
 
   const images = gallery
     ? gallery.map(image => {
@@ -54,7 +52,42 @@ const FoodCard = ({ foodItem }: { foodItem: FoodItem }) => {
       })
     : []
 
+  // showing first image on the card
   const coverPic = images[0]
+
+  // this function adds items to cart with quantity
+  const handleAddItem = () => {
+    setCartItems(current =>
+      current.map(item => {
+        if (item.id === id) {
+          return { ...item, quantity: item.quantity + count }
+        }
+
+        return item
+      }),
+    )
+    setOpen(false)
+    setCount(1)
+  }
+
+  // this function add items to collection context
+  const handleAddCollection = () => {
+    setCollectionItems(current => {
+      const addedItemIndex = current.findIndex(item => {
+        return item.id === id
+      })
+
+      if (addedItemIndex >= 0) {
+        // If the item exists, return a new array without it
+        return current.filter(item => item.id !== id)
+      }
+
+      return [...current, foodItem]
+    })
+  }
+
+  // boolean for highlighting heart icon
+  const isActive = collectionItems.find(item => item.id === id)
 
   return (
     <>
@@ -103,13 +136,14 @@ const FoodCard = ({ foodItem }: { foodItem: FoodItem }) => {
                 setIsPending(true)
 
                 setCartItems(current => {
-                  const AddedItemIndex = current.findIndex(
+                  // later updating the local state
+                  const addedItemIndex = current.findIndex(
                     item => item.id === foodItem.id,
                   )
 
-                  if (AddedItemIndex >= 0) {
+                  if (addedItemIndex >= 0) {
                     return current.map((item, index) => {
-                      if (index === AddedItemIndex) {
+                      if (index === addedItemIndex) {
                         return { ...item, quantity: item.quantity + 1 }
                       }
 
@@ -127,9 +161,13 @@ const FoodCard = ({ foodItem }: { foodItem: FoodItem }) => {
               variant='outline'
               onClick={e => {
                 e.stopPropagation()
+                handleAddCollection()
               }}
-              className='bg-background px-3 hover:bg-secondary'>
-              <Heart size={16} />
+              className='bg-background px-3 hover:bg-foreground'>
+              <Heart
+                size={16}
+                className={`${isActive ? 'fill-primary' : ''}`}
+              />
             </Button>
           </div>
         </div>
@@ -163,7 +201,7 @@ const FoodCard = ({ foodItem }: { foodItem: FoodItem }) => {
                       if (item) {
                         return (
                           <SwiperSlide
-                            className='relative bg-secondary'
+                            className='bg-secondary relative'
                             key={item.alt}>
                             <Image
                               src={item.url}
@@ -192,10 +230,15 @@ const FoodCard = ({ foodItem }: { foodItem: FoodItem }) => {
               </div>
 
               <DrawerFooter className='flex-row items-center gap-2  px-0'>
-                <OrderInput count={count} setCount={setCount} />
+                <OrderInput
+                  defaultValue={count}
+                  onChange={value => {
+                    setCount(value)
+                  }}
+                />
 
-                <Button className='flex-grow'>
-                  Add Item | ₹ {price * (count || 1)}
+                <Button className='flex-grow' onClick={handleAddItem}>
+                  Add Item | ₹ {price * count}
                 </Button>
               </DrawerFooter>
             </div>

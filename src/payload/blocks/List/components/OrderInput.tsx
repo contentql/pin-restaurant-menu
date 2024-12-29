@@ -1,16 +1,33 @@
 import NumberFlow from '@number-flow/react'
 import { Minus, Plus } from 'lucide-react'
-import { Dispatch, SetStateAction } from 'react'
+import { useState } from 'react'
 
 import Button from '@/components/common/Button'
 
 type OrderInputType = {
-  count: number
-  setCount: Dispatch<SetStateAction<number>>
+  defaultValue?: number
   size?: 'small' | 'default'
+  onChange?: (value: number) => void
 }
 
-const OrderInput = ({ count, setCount, size = 'default' }: OrderInputType) => {
+const OrderInput = ({
+  defaultValue = 0,
+  size = 'default',
+  onChange = () => {},
+}: OrderInputType) => {
+  const [count, setCount] = useState(defaultValue)
+
+  const handleChange = (type: 'inc' | 'dec') => {
+    if (count === 0 && type === 'dec') {
+      return
+    }
+
+    const newCount = type === 'inc' ? count + 1 : count - 1
+
+    setCount(newCount)
+    onChange(newCount)
+  }
+
   return (
     <div
       className={`flex items-center gap-2 rounded border ${size === 'small' ? 'h-8' : ''}`}>
@@ -18,15 +35,7 @@ const OrderInput = ({ count, setCount, size = 'default' }: OrderInputType) => {
         variant='outline'
         size='icon'
         className='border-none'
-        onClick={() =>
-          setCount(current => {
-            if (current === 1) {
-              return current
-            }
-
-            return current - 1
-          })
-        }>
+        onClick={() => handleChange('dec')}>
         <Minus size={16} />
       </Button>
 
@@ -38,7 +47,7 @@ const OrderInput = ({ count, setCount, size = 'default' }: OrderInputType) => {
         variant='outline'
         size='icon'
         className='border-none'
-        onClick={() => setCount(current => current + 1)}>
+        onClick={() => handleChange('inc')}>
         <Plus size={16} />
       </Button>
     </div>
