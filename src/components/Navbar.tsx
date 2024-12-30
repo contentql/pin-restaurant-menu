@@ -56,6 +56,7 @@ const Navbar = ({ metadata }: { metadata: SiteSetting; user: User | null }) => {
                 alt={logoDetails.alt}
                 width={width || 24}
                 height={height || 24}
+                className='dark:invert'
               />
             </Link>
           </div>
