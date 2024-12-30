@@ -241,20 +241,6 @@ export const seedSiteSettings = async ({
             },
           ],
         },
-        redirectionLinks: {
-          authorLink: {
-            relationTo: 'pages',
-            value: authorDetailsLink.id,
-          },
-          blogLink: {
-            relationTo: 'pages',
-            value: blogDetailsLink.id,
-          },
-          tagLink: {
-            relationTo: 'pages',
-            value: tagDetailsLink.id,
-          },
-        },
       },
     })
 

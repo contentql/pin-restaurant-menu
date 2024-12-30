@@ -11,6 +11,8 @@ import {
 } from '@/components/common/Dropdown'
 import { generateMenuLinks } from '@/utils/generateMenuLinks'
 
+import ToggleTheme from './ToggleTheme'
+
 const Navbar = ({ metadata }: { metadata: SiteSetting; user: User | null }) => {
   const { navbar } = metadata
   const { logo, menuLinks } = navbar
@@ -44,7 +46,7 @@ const Navbar = ({ metadata }: { metadata: SiteSetting; user: User | null }) => {
   return (
     <header
       id='main-header'
-      className='fixed left-0 top-0 z-50 w-full bg-background shadow-sm'>
+      className='fixed left-0 top-0 z-50 w-full border-b bg-background shadow-sm'>
       <div className='container flex h-14 items-center justify-between'>
         {logoDetails.url && (
           <div className='flex-1'>
@@ -98,6 +100,8 @@ const Navbar = ({ metadata }: { metadata: SiteSetting; user: User | null }) => {
               </ul>
             </nav>
           )}
+
+          <ToggleTheme />
         </div>
       </div>
     </header>

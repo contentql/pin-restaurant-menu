@@ -2,6 +2,7 @@ import { Params } from '../types'
 import { ListType } from '@payload-types'
 import { getPayload } from 'payload'
 import configPromise from 'payload.config'
+import { Suspense } from 'react'
 
 import FoodItems from './components/FoodItems'
 
@@ -24,7 +25,11 @@ const List: React.FC<ListProps> = async ({ params, ...block }) => {
     draft: false,
   })
 
-  return <FoodItems foodItems={docs} categories={categories} />
+  return (
+    <Suspense>
+      <FoodItems foodItems={docs} categories={categories} />
+    </Suspense>
+  )
 }
 
 export default List

@@ -93,19 +93,19 @@ const FoodCard = ({ foodItem }: { foodItem: FoodItem }) => {
     <>
       <div
         onClick={() => setOpen(current => !current)}
-        className='my-4 flex w-full cursor-pointer justify-between gap-2 rounded-sm border p-4 shadow-md'>
+        className='my-4 flex w-full cursor-pointer justify-between gap-2 rounded-md border p-4 shadow-md'>
         <div>
           <div className='flex items-center gap-2'>
             {type === 'nonVeg' ? <NonVegLogo /> : <VegLogo />}
 
             {special && (
-              <span className='inline-flex items-center gap-x-1.5 rounded-full border border-yellow-800 bg-amber-100 px-1.5 text-xs font-medium text-yellow-800'>
+              <span className='inline-flex items-center gap-x-1.5 rounded border border-yellow-800 bg-amber-100 px-1.5 text-xs font-medium text-yellow-800 dark:border-yellow-400/20 dark:bg-yellow-400/10 dark:text-yellow-500'>
                 Special
               </span>
             )}
           </div>
 
-          <p className='mt-2 line-clamp-1 font-display text-lg'>{name}</p>
+          <p className='mt-2 font-display'>{name}</p>
 
           <p className='text-sm font-semibold'>₹ {price}</p>
 
@@ -113,7 +113,7 @@ const FoodCard = ({ foodItem }: { foodItem: FoodItem }) => {
         </div>
 
         <div className='relative'>
-          <div className='relative size-32 flex-shrink-0 overflow-hidden rounded'>
+          <div className='relative size-32 flex-shrink-0 overflow-hidden rounded-sm'>
             {coverPic ? (
               <Image src={coverPic.url} fill alt={coverPic.alt} sizes='600px' />
             ) : (
@@ -195,7 +195,7 @@ const FoodCard = ({ foodItem }: { foodItem: FoodItem }) => {
                   clickable: true,
                 }}
                 modules={[Pagination]}
-                className='mx-auto h-60 w-full rounded'>
+                className='mx-auto h-60 w-full rounded-sm'>
                 {images
                   ? images.map(item => {
                       if (item) {
@@ -220,7 +220,15 @@ const FoodCard = ({ foodItem }: { foodItem: FoodItem }) => {
               </Swiper>
 
               <div className='mt-4'>
-                <NonVegLogo />
+                <div className='flex items-center gap-2'>
+                  {type === 'nonVeg' ? <NonVegLogo /> : <VegLogo />}
+
+                  {special && (
+                    <span className='inline-flex items-center gap-x-1.5 rounded border border-yellow-800 bg-amber-100 px-1.5 text-xs font-medium text-yellow-800 dark:border-yellow-400/20 dark:bg-yellow-400/10 dark:text-yellow-500'>
+                      Special
+                    </span>
+                  )}
+                </div>
 
                 <p className='mt-2 line-clamp-1 font-display text-lg'>{name}</p>
 

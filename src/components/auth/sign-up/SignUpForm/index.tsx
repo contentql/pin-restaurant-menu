@@ -3,7 +3,6 @@
 import { LabelInputContainer } from '../../common/fields'
 import { zodResolver } from '@hookform/resolvers/zod'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import slugify from 'slugify'
 import { toast } from 'sonner'
@@ -16,8 +15,6 @@ import { trpc } from '@/trpc/client'
 import { SignUpFormData, SignUpFormSchema } from './validator'
 
 const SignUpForm: React.FC = () => {
-  const router = useRouter()
-
   const form = useForm<SignUpFormData>({
     resolver: zodResolver(SignUpFormSchema),
     mode: 'onBlur',
@@ -91,7 +88,7 @@ const SignUpForm: React.FC = () => {
           </Alert>
         ) : null}
         <h1 className=' mb-1 text-3xl font-semibold'>Sign Up</h1>
-        <p className='mb-6 text-secondary'>
+        <p className='text-secondary mb-6'>
           Join our Community with all time access and free{' '}
         </p>
 
@@ -196,7 +193,7 @@ const SignUpForm: React.FC = () => {
           </div>
         </form>
 
-        <div className='mt-8 text-center text-sm text-secondary'>
+        <div className='text-secondary mt-8 text-center text-sm'>
           <p>
             Already have an account?{' '}
             <Link href='/sign-in' className='text-primary hover:underline'>

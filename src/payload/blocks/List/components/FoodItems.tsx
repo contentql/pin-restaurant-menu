@@ -115,7 +115,7 @@ const FoodItems = ({
             value={value}
             onChange={e => setValue(e.target.value)}
           />
-          <Search size={24} className='absolute left-2 top-2' />
+          <Search size={20} className='absolute left-3 top-2.5 text-text/70' />
           {isFetching ? <Spinner className='absolute right-3 top-2.5' /> : null}
         </div>
 

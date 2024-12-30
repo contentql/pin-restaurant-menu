@@ -41,8 +41,8 @@ const GenerateResetTokenForm: React.FC = () => {
     <main
       id='content'
       role='main'
-      className='bg-base-100 flex min-h-screen w-full items-center justify-center'>
-      <div className='mx-auto w-full max-w-md drop-shadow-2xl  md:p-8'>
+      className='flex min-h-screen w-full items-center justify-center'>
+      <div className='mx-auto w-full max-w-md p-6 drop-shadow-2xl md:p-8'>
         <div className=''>
           {isGeneratePasswordSuccess ? (
             <Alert variant='success' className='mb-12'>
@@ -58,7 +58,7 @@ const GenerateResetTokenForm: React.FC = () => {
             </Alert>
           ) : null}
           <h1 className='mb-1 text-3xl font-semibold'>Forgot your password</h1>
-          <p className='mb-6 text-secondary'>
+          <p className='text-secondary mb-6'>
             Forgot your password? Please enter your email we&apos;ll send you
             reset link
           </p>

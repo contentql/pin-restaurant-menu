@@ -29,8 +29,8 @@ const FilterDrawer = ({ categories }: { categories: Category[] }) => {
   return (
     <Drawer>
       <DrawerTrigger asChild>
-        <Button variant='outline' className='border-text/30 px-2.5'>
-          <SlidersHorizontal size={20} />
+        <Button variant='outline' className='border-border px-2.5'>
+          <SlidersHorizontal size={20} className='text-text/70' />
         </Button>
       </DrawerTrigger>
 

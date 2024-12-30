@@ -45,13 +45,12 @@ const ProfileForm = ({ user }: { user: User }) => {
     },
   )
 
-  const { imageUrl, username, displayName, role, bio } = data || user
+  const { imageUrl, username, displayName, role } = data || user
 
   const [formData, setFormData] = useState<ProfileFormDataType>({
     displayName: typeof displayName === 'string' ? displayName : '',
     password: '',
     confirmPassword: '',
-    bio: typeof bio === 'string' ? bio : '',
   })
 
   const [userImage, setUserImage] = useState<File>()
@@ -185,14 +184,14 @@ const ProfileForm = ({ user }: { user: User }) => {
               <div className='flex w-full items-center justify-center'>
                 <label
                   htmlFor='dropzone-file'
-                  className='flex h-64 w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed transition-colors hover:bg-secondary/10'>
+                  className='hover:bg-secondary/10 flex h-64 w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed transition-colors'>
                   <div className='flex flex-col items-center justify-center pb-6 pt-5'>
                     <ImageUp className='text-secondary' />
 
                     <p className='mt-4 text-sm'>
                       <span className='font-semibold'>Click to upload</span>
                     </p>
-                    <p className='mt-2 text-center text-xs leading-5 text-secondary'>
+                    <p className='text-secondary mt-2 text-center text-xs leading-5'>
                       Use square image for best results,
                       <br /> maximum upload size is 5MB
                     </p>
@@ -240,7 +239,7 @@ const ProfileForm = ({ user }: { user: User }) => {
         <div className='mb-4 sm:mb-6'>
           <label
             htmlFor='displayName'
-            className='mb-1 block text-sm font-medium text-secondary'>
+            className='text-secondary mb-1 block text-sm font-medium'>
             Name
           </label>
           <Input
@@ -256,7 +255,7 @@ const ProfileForm = ({ user }: { user: User }) => {
         <div className='mb-4 sm:mb-6'>
           <label
             htmlFor='bio'
-            className='mb-1 block text-sm font-medium text-secondary'>
+            className='text-secondary mb-1 block text-sm font-medium'>
             Bio
           </label>
           <Textarea
@@ -271,7 +270,7 @@ const ProfileForm = ({ user }: { user: User }) => {
           <div className='w-full'>
             <label
               htmlFor='username'
-              className='mb-1 block text-sm font-medium text-secondary'>
+              className='text-secondary mb-1 block text-sm font-medium'>
               Username
             </label>
             <Input
@@ -287,7 +286,7 @@ const ProfileForm = ({ user }: { user: User }) => {
           <div className='w-full'>
             <label
               htmlFor='email'
-              className='mb-1 block text-sm font-medium text-secondary'>
+              className='text-secondary mb-1 block text-sm font-medium'>
               Email
             </label>
             <Input
@@ -305,7 +304,7 @@ const ProfileForm = ({ user }: { user: User }) => {
           <div className='w-full'>
             <label
               htmlFor='password'
-              className='mb-1 block text-sm font-medium text-secondary'>
+              className='text-secondary mb-1 block text-sm font-medium'>
               New Password
             </label>
             <Input
@@ -320,7 +319,7 @@ const ProfileForm = ({ user }: { user: User }) => {
           <div className='w-full'>
             <label
               htmlFor='confirmPassword'
-              className='mb-1 block text-sm font-medium text-secondary'>
+              className='text-secondary mb-1 block text-sm font-medium'>
               Confirm Password
             </label>
             <Input

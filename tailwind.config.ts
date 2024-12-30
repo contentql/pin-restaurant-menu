@@ -23,6 +23,7 @@ const config: Config = {
         text: 'hsl(var(--text))',
         foreground: 'hsl(var(--foreground))',
         primary: 'hsl(var(--primary))',
+        border: 'hsl(var(--border))',
 
         card: 'hsl(var(--card))',
         input: 'hsl(var(--input))',

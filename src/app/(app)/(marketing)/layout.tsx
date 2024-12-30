@@ -1,12 +1,13 @@
 import configPromise from '@payload-config'
 import { unstable_cache } from 'next/cache'
 import { headers } from 'next/headers'
+import { NuqsAdapter } from 'nuqs/adapters/next/app'
 import { getPayload } from 'payload'
 
 // import Footer from '@/components/Footer'
 import Navbar from '@/components/Navbar'
+import { FiltersProvider } from '@/utils/filtersContext'
 import { getCurrentUser } from '@/utils/getCurrentUser'
-import { MetadataProvider } from '@/utils/metadataContext'
 
 const getCachedSiteSettings = unstable_cache(
   async () => {
@@ -32,13 +33,16 @@ const MarketingLayout = async ({ children }: { children: React.ReactNode }) => {
   const user = await getCurrentUser(headersList)
 
   return (
-    <MetadataProvider metadata={metadata}>
-      <div className='grid min-h-screen w-full grid-rows-[1fr_auto]'>
-        <Navbar metadata={metadata} user={user} />
-        <main className='container my-20'>{children}</main>
-        {/* <Footer metadata={metadata} /> */}
-      </div>
-    </MetadataProvider>
+    <div className='grid min-h-screen w-full grid-rows-[1fr_auto]'>
+      <Navbar metadata={metadata} user={user} />
+      <main className='container my-20'>
+        <NuqsAdapter>
+          <FiltersProvider>{children}</FiltersProvider>
+        </NuqsAdapter>
+      </main>
+
+      {/* <Footer metadata={metadata} /> */}
+    </div>
   )
 }
 

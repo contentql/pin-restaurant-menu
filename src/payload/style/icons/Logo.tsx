@@ -18,7 +18,7 @@ const Logo = () => {
         className='logo-image'
       />
 
-      <p>ContentQL</p>
+      <p style={{ marginBottom: 0 }}>ContentQL</p>
     </div>
   )
 }

@@ -7,6 +7,7 @@ import {
 } from '@contentql/core'
 import { env } from '@env'
 import configPromise from '@payload-config'
+import { SiteSetting } from '@payload-types'
 import type { Metadata, Viewport } from 'next'
 import { unstable_cache } from 'next/cache'
 import { getPayload } from 'payload'
@@ -92,6 +93,29 @@ export const viewport: Viewport = {
   initialScale: 1,
 }
 
+type ThemeStylesType = {
+  colors: SiteSetting['themeSettings']['lightMode']
+  fontName: {
+    display: string
+    body: string
+  }
+  radius: SiteSetting['themeSettings']['radius']
+}
+
+function generateThemeVariables({ colors, radius, fontName }: ThemeStylesType) {
+  return `
+      --background: ${hexToHsl(colors.background)};
+      --text: ${hexToHsl(colors.text)};
+      --foreground: ${hexToHsl(colors.foreground)};
+      --primary: ${hexToHsl(colors.primary)};
+      --border: ${hexToHsl(colors.border)};
+      --popover: ${hexToHsl(colors.popover)};
+      --font-display: ${fontName.display || ''}, sans-serif;
+      --font-body: ${fontName.body || ''}, sans-serif;
+      --border-radius: ${borderRadius[radius]}rem;
+  `
+}
+
 export default async function RootLayout({
   children,
 }: Readonly<{
@@ -151,22 +175,30 @@ export default async function RootLayout({
     fontUrlList: googleFontsList,
   })
 
+  // All the color variables are generated using generateThemeStyles function for light & dark mode
+  const lightModeVariables = generateThemeVariables({
+    colors: lightMode,
+    fontName: {
+      display: displayFont?.fontName ?? '',
+      body: bodyFont?.fontName ?? '',
+    },
+    radius,
+  })
+
+  const darkModeVariables = generateThemeVariables({
+    colors: darkMode,
+    fontName: {
+      display: displayFont?.fontName ?? '',
+      body: bodyFont?.fontName ?? '',
+    },
+    radius,
+  })
+
   return (
-    <html
-      lang='en'
-      style={
-        {
-          '--background': hexToHsl(lightMode.background),
-          '--text': hexToHsl(lightMode.text),
-          '--foreground': hexToHsl(lightMode.foreground),
-          '--primary': hexToHsl(lightMode.primary),
-          '--font-display': `${displayFont?.fontName ?? ''}, sans-serif`,
-          '--font-body': `${bodyFont?.fontName ?? ''}, sans-serif`,
-          '--border-radius': `${borderRadius[radius]}rem`,
-        } as React.CSSProperties & { [key: `--${string}`]: string }
-      }>
+    <html lang='en'>
       <head>
         <link rel='icon' type='image/x-icon' href={faviconUrl} />
+        {/* Preloading the custom font given by the user */}
         {displayFont?.url && (
           <link
             rel='preload'
@@ -187,6 +219,7 @@ export default async function RootLayout({
           />
         )}
 
+        {/* If user uploads custom font setting styles of that font */}
         <style
           dangerouslySetInnerHTML={{
             __html: `${
@@ -214,6 +247,7 @@ export default async function RootLayout({
           }}
         />
 
+        {/* Link & Style tags are created from googleFonts response */}
         {response.map(({ cssText, preloadLinks }, index) => (
           <Fragment key={index}>
             {preloadLinks.map(({ href, type }) =>
@@ -231,6 +265,21 @@ export default async function RootLayout({
             <style dangerouslySetInnerHTML={{ __html: cssText }} />
           </Fragment>
         ))}
+
+        {/* following shadcn approach & generating lightMode & darkMode variables */}
+        <style
+          dangerouslySetInnerHTML={{
+            __html: `
+            :root {
+            ${lightModeVariables}
+            }
+            \n
+              .dark {
+                ${darkModeVariables}
+              }
+            `,
+          }}
+        />
       </head>
 
       <body className={`font-body antialiased`}>

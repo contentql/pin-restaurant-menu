@@ -5,13 +5,12 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { httpBatchLink } from '@trpc/client'
 import { KBarProvider } from 'kbar'
 import { AppProgressBar as ProgressBar } from 'next-nprogress-bar'
-import { NuqsAdapter } from 'nuqs/adapters/next/app'
+import { ThemeProvider } from 'next-themes'
 import React, { useState } from 'react'
 import SuperJSON from 'superjson'
 
 import { trpc } from '@/trpc/client'
 import { CartProvider } from '@/utils/cartContext'
-import { FiltersProvider } from '@/utils/filtersContext'
 
 export default function Provider({ children }: { children: React.ReactNode }) {
   const [queryClient] = useState(
@@ -39,22 +38,20 @@ export default function Provider({ children }: { children: React.ReactNode }) {
   )
 
   return (
-    <trpc.Provider client={trpcClient} queryClient={queryClient}>
-      <QueryClientProvider client={queryClient}>
-        <ProgressBar
-          height='2px'
-          color='#A978DE'
-          options={{ showSpinner: false }}
-        />
-        <NuqsAdapter>
+    <ThemeProvider enableSystem attribute='class'>
+      <trpc.Provider client={trpcClient} queryClient={queryClient}>
+        <QueryClientProvider client={queryClient}>
+          <ProgressBar
+            height='2px'
+            color='hsl(var(--primary))'
+            options={{ showSpinner: false }}
+          />
           <KBarProvider>
-            <FiltersProvider>
-              <CartProvider>{children}</CartProvider>
-            </FiltersProvider>
+            <CartProvider>{children}</CartProvider>
           </KBarProvider>
-        </NuqsAdapter>
-        {/* <ReactQueryDevtools initialIsOpen={false} /> */}
-      </QueryClientProvider>
-    </trpc.Provider>
+          {/* <ReactQueryDevtools initialIsOpen={false} /> */}
+        </QueryClientProvider>
+      </trpc.Provider>
+    </ThemeProvider>
   )
 }

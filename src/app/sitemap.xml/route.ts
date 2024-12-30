@@ -4,16 +4,8 @@ import configPromise from '@payload-config'
 import { NextResponse } from 'next/server'
 import { getPayload } from 'payload'
 
-import { serverClient } from '@/trpc/serverClient'
-
 export const dynamic = 'force-dynamic'
 type StaticRoute = { route: string; updatedAt: Date }
-
-const sitemapGenerationMapping = {
-  blogs: serverClient.blog.getAllBlogs(),
-  tags: serverClient.tag.getAllTags(),
-  users: serverClient.author.getAllAuthors(),
-} as const
 
 export async function GET() {
   const payload = await getPayload({ config: configPromise })
@@ -37,37 +29,37 @@ export async function GET() {
     }
 
     // If the route is dynamic (contains `[`)
-    if (page?.path?.includes('[') && page.layout) {
-      const blockData = page.layout.find(block => block.blockType === 'Details')
+    // if (page?.path?.includes('[') && page.layout) {
+    //   const blockData = page.layout.find(block => block.blockType === 'Details')
 
-      // If it has a Details block with a valid collectionSlug
-      if (blockData?.blockType === 'Details' && blockData.collectionSlug) {
-        const slug = blockData.collectionSlug
+    //   // If it has a Details block with a valid collectionSlug
+    //   if (blockData?.blockType === 'Details' && blockData.collectionSlug) {
+    //     const slug = blockData.collectionSlug
 
-        // Fetch all slugs for the given collection (e.g., blogs, tags, users)
-        const data = await sitemapGenerationMapping[slug]
+    //     // Fetch all slugs for the given collection (e.g., blogs, tags, users)
+    //     const data = await sitemapGenerationMapping[slug]
 
-        if (data && Array.isArray(data)) {
-          let path = ''
-          for (const item of data) {
-            if ('username' in item) {
-              path = item.username
-            } else if ('slug' in item) {
-              path = `${item.slug}`
-            }
+    //     if (data && Array.isArray(data)) {
+    //       let path = ''
+    //       for (const item of data) {
+    //         if ('username' in item) {
+    //           path = item.username
+    //         } else if ('slug' in item) {
+    //           path = `${item.slug}`
+    //         }
 
-            // Dynamically replace `[parameter]` with actual slug
-            const dynamicPath = page.path.replace(/\[(.*?)\]/, path)
+    //         // Dynamically replace `[parameter]` with actual slug
+    //         const dynamicPath = page.path.replace(/\[(.*?)\]/, path)
 
-            sitemapParams.push({
-              route: dynamicPath,
-              updatedAt: new Date(page.updatedAt),
-            })
-          }
-        }
-        continue
-      }
-    }
+    //         sitemapParams.push({
+    //           route: dynamicPath,
+    //           updatedAt: new Date(page.updatedAt),
+    //         })
+    //       }
+    //     }
+    //     continue
+    //   }
+    // }
 
     // Statics (non-dynamic paths)
     const nonDynamicPath = page?.path?.split('/').filter(Boolean)[0]

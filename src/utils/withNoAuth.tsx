@@ -1,7 +1,7 @@
 import { User } from '@payload-types'
 import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
-import { ComponentType, ReactElement } from 'react'
+import { ComponentType, ReactElement, Suspense } from 'react'
 
 import { getCurrentUser } from '@/utils/getCurrentUser'
 
@@ -42,7 +42,11 @@ const withNoAuth = <P extends object>(
       return redirect(options.redirectPath)
     }
 
-    return <WrappedComponent user={user} {...props} />
+    return (
+      <Suspense>
+        <WrappedComponent user={user} {...props} />
+      </Suspense>
+    )
   }
 
   return ComponentWithNoAuth as ComponentType<P>

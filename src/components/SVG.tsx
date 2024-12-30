@@ -310,8 +310,15 @@ export const VegLogo = (props: ComponentPropsWithRef<'svg'>) => {
         rx='9.52'
         stroke='#2E9545'
         strokeWidth='8'
+        className='dark:stroke-[#5DB996]'
       />
-      <circle cx='43' cy='43' r='15' fill='#2E9545' />
+      <circle
+        cx='43'
+        cy='43'
+        r='15'
+        fill='#2E9545'
+        className='dark:fill-[#5DB996]'
+      />
     </svg>
   )
 }
@@ -333,10 +340,12 @@ export const NonVegLogo = (props: ComponentPropsWithRef<'svg'>) => {
         rx='9.52'
         stroke='#D1202A'
         strokeWidth='8'
+        className='dark:stroke-[#F15A59]'
       />
       <path
         d='M40.4019 29.5C41.5566 27.5 44.4434 27.5 45.5981 29.5L57.7224 50.5C58.8771 52.5 57.4338 55 55.1244 55H30.8756C28.5662 55 27.1229 52.5 28.2776 50.5L40.4019 29.5Z'
         fill='#D1202A'
+        className='dark:fill-[#F15A59]'
       />
     </svg>
   )

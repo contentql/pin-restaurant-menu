@@ -1,4 +1,4 @@
-import { User } from '@payload-types'
+import { SiteSetting } from '@payload-types'
 import { ComponentPropsWithRef } from 'react'
 
 import {
@@ -21,7 +21,9 @@ import {
   YoutubeLogo,
 } from '@/components/SVG'
 
-type PlatformType = NonNullable<User['socialLinks']>[number]['platform']
+type PlatformType = NonNullable<
+  SiteSetting['footer']['socialLinks']
+>[number]['platform']
 
 type LogoMappingType = {
   [key in PlatformType]: (
