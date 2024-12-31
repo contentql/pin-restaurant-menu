@@ -11,9 +11,16 @@ import {
 } from '@/components/common/Dropdown'
 import { generateMenuLinks } from '@/utils/generateMenuLinks'
 
+import ProfileDropdown from './ProfileDropdown'
 import ToggleTheme from './ToggleTheme'
 
-const Navbar = ({ metadata }: { metadata: SiteSetting; user: User | null }) => {
+const Navbar = ({
+  metadata,
+  user,
+}: {
+  metadata: SiteSetting
+  user: User | null
+}) => {
   const { navbar } = metadata
   const { logo, menuLinks } = navbar
 
@@ -103,6 +110,7 @@ const Navbar = ({ metadata }: { metadata: SiteSetting; user: User | null }) => {
           )}
 
           <ToggleTheme />
+          <ProfileDropdown user={user} navLinks={navLinks} />
         </div>
       </div>
     </header>
