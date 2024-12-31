@@ -4,7 +4,7 @@ import { headers } from 'next/headers'
 import { NuqsAdapter } from 'nuqs/adapters/next/app'
 import { getPayload } from 'payload'
 
-// import Footer from '@/components/Footer'
+import Footer from '@/components/Footer'
 import Navbar from '@/components/Navbar'
 import { FiltersProvider } from '@/utils/filtersContext'
 import { getCurrentUser } from '@/utils/getCurrentUser'
@@ -41,7 +41,7 @@ const MarketingLayout = async ({ children }: { children: React.ReactNode }) => {
         </NuqsAdapter>
       </main>
 
-      {/* <Footer metadata={metadata} /> */}
+      <Footer metadata={metadata} />
     </div>
   )
 }

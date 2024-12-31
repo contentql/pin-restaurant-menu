@@ -7,6 +7,8 @@ import { fileURLToPath } from 'url'
 import { ResetPassword } from '@/emails/reset-password'
 import { UserAccountVerification } from '@/emails/verify-email'
 import { blocksConfig } from '@/payload/blocks/blockConfig'
+import { revalidateCategories } from '@/payload/hooks/revalidateCategories'
+import { revalidateFoodItems } from '@/payload/hooks/revalidateFoodItems'
 import { revalidatePages } from '@/payload/hooks/revalidatePages'
 import { revalidateSiteSettings } from '@/payload/hooks/revalidateSiteSettings'
 
@@ -84,6 +86,20 @@ export default cqlConfig({
       fields: [],
       hooks: {
         afterChange: [revalidatePages],
+      },
+    },
+    {
+      slug: 'foodItems',
+      fields: [],
+      hooks: {
+        afterChange: [revalidateFoodItems],
+      },
+    },
+    {
+      slug: 'categories',
+      fields: [],
+      hooks: {
+        afterChange: [revalidateCategories],
       },
     },
   ],

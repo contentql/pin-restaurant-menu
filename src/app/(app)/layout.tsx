@@ -16,6 +16,7 @@ import { Toaster } from 'sonner'
 
 import '@/app/(app)/globals.css'
 import Provider from '@/trpc/Provider'
+import { MetadataProvider } from '@/utils/metadataContext'
 
 const getCachedSiteSettings = unstable_cache(
   async () => {
@@ -121,7 +122,8 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode
 }>) {
-  const { general, themeSettings } = await getCachedSiteSettings()
+  const metadata = await getCachedSiteSettings()
+  const { general, themeSettings } = metadata
   const generalSettings = general
   const { lightMode, darkMode, fonts, radius } = themeSettings
 
@@ -283,7 +285,9 @@ export default async function RootLayout({
       </head>
 
       <body className={`font-body antialiased`}>
-        <Provider>{children}</Provider>
+        <MetadataProvider metadata={metadata}>
+          <Provider>{children}</Provider>
+        </MetadataProvider>
 
         {/* Sonnar toast library */}
         <Toaster richColors theme='dark' />

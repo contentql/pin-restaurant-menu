@@ -214,17 +214,20 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   await db.run(sql`CREATE INDEX \`_pages_v_rels_forms_id_idx\` ON \`_pages_v_rels\` (\`forms_id\`);`)
   await db.run(sql`CREATE TABLE \`food_items\` (
   	\`id\` integer PRIMARY KEY NOT NULL,
-  	\`name\` text NOT NULL,
+  	\`name\` text,
   	\`description\` text,
-  	\`type\` text NOT NULL,
-  	\`price\` numeric NOT NULL,
-  	\`special\` integer DEFAULT false NOT NULL,
+  	\`type\` text,
+  	\`price\` numeric,
+  	\`special\` integer DEFAULT false,
+  	\`publish_on\` text,
   	\`updated_at\` text DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ', 'now')) NOT NULL,
-  	\`created_at\` text DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ', 'now')) NOT NULL
+  	\`created_at\` text DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ', 'now')) NOT NULL,
+  	\`_status\` text DEFAULT 'draft'
   );
   `)
   await db.run(sql`CREATE INDEX \`food_items_updated_at_idx\` ON \`food_items\` (\`updated_at\`);`)
   await db.run(sql`CREATE INDEX \`food_items_created_at_idx\` ON \`food_items\` (\`created_at\`);`)
+  await db.run(sql`CREATE INDEX \`food_items__status_idx\` ON \`food_items\` (\`_status\`);`)
   await db.run(sql`CREATE TABLE \`food_items_rels\` (
   	\`id\` integer PRIMARY KEY NOT NULL,
   	\`order\` integer,
@@ -242,17 +245,61 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   await db.run(sql`CREATE INDEX \`food_items_rels_path_idx\` ON \`food_items_rels\` (\`path\`);`)
   await db.run(sql`CREATE INDEX \`food_items_rels_categories_id_idx\` ON \`food_items_rels\` (\`categories_id\`);`)
   await db.run(sql`CREATE INDEX \`food_items_rels_media_id_idx\` ON \`food_items_rels\` (\`media_id\`);`)
+  await db.run(sql`CREATE TABLE \`_food_items_v\` (
+  	\`id\` integer PRIMARY KEY NOT NULL,
+  	\`parent_id\` integer,
+  	\`version_name\` text,
+  	\`version_description\` text,
+  	\`version_type\` text,
+  	\`version_price\` numeric,
+  	\`version_special\` integer DEFAULT false,
+  	\`version_publish_on\` text,
+  	\`version_updated_at\` text,
+  	\`version_created_at\` text,
+  	\`version__status\` text DEFAULT 'draft',
+  	\`created_at\` text DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ', 'now')) NOT NULL,
+  	\`updated_at\` text DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ', 'now')) NOT NULL,
+  	\`latest\` integer,
+  	FOREIGN KEY (\`parent_id\`) REFERENCES \`food_items\`(\`id\`) ON UPDATE no action ON DELETE set null
+  );
+  `)
+  await db.run(sql`CREATE INDEX \`_food_items_v_parent_idx\` ON \`_food_items_v\` (\`parent_id\`);`)
+  await db.run(sql`CREATE INDEX \`_food_items_v_version_version_updated_at_idx\` ON \`_food_items_v\` (\`version_updated_at\`);`)
+  await db.run(sql`CREATE INDEX \`_food_items_v_version_version_created_at_idx\` ON \`_food_items_v\` (\`version_created_at\`);`)
+  await db.run(sql`CREATE INDEX \`_food_items_v_version_version__status_idx\` ON \`_food_items_v\` (\`version__status\`);`)
+  await db.run(sql`CREATE INDEX \`_food_items_v_created_at_idx\` ON \`_food_items_v\` (\`created_at\`);`)
+  await db.run(sql`CREATE INDEX \`_food_items_v_updated_at_idx\` ON \`_food_items_v\` (\`updated_at\`);`)
+  await db.run(sql`CREATE INDEX \`_food_items_v_latest_idx\` ON \`_food_items_v\` (\`latest\`);`)
+  await db.run(sql`CREATE TABLE \`_food_items_v_rels\` (
+  	\`id\` integer PRIMARY KEY NOT NULL,
+  	\`order\` integer,
+  	\`parent_id\` integer NOT NULL,
+  	\`path\` text NOT NULL,
+  	\`categories_id\` integer,
+  	\`media_id\` integer,
+  	FOREIGN KEY (\`parent_id\`) REFERENCES \`_food_items_v\`(\`id\`) ON UPDATE no action ON DELETE cascade,
+  	FOREIGN KEY (\`categories_id\`) REFERENCES \`categories\`(\`id\`) ON UPDATE no action ON DELETE cascade,
+  	FOREIGN KEY (\`media_id\`) REFERENCES \`media\`(\`id\`) ON UPDATE no action ON DELETE cascade
+  );
+  `)
+  await db.run(sql`CREATE INDEX \`_food_items_v_rels_order_idx\` ON \`_food_items_v_rels\` (\`order\`);`)
+  await db.run(sql`CREATE INDEX \`_food_items_v_rels_parent_idx\` ON \`_food_items_v_rels\` (\`parent_id\`);`)
+  await db.run(sql`CREATE INDEX \`_food_items_v_rels_path_idx\` ON \`_food_items_v_rels\` (\`path\`);`)
+  await db.run(sql`CREATE INDEX \`_food_items_v_rels_categories_id_idx\` ON \`_food_items_v_rels\` (\`categories_id\`);`)
+  await db.run(sql`CREATE INDEX \`_food_items_v_rels_media_id_idx\` ON \`_food_items_v_rels\` (\`media_id\`);`)
   await db.run(sql`CREATE TABLE \`categories\` (
   	\`id\` integer PRIMARY KEY NOT NULL,
   	\`image_id\` integer,
-  	\`name\` text NOT NULL,
-  	\`description\` text NOT NULL,
+  	\`name\` text,
+  	\`description\` text,
   	\`meta_title\` text,
   	\`meta_description\` text,
   	\`meta_image_id\` integer,
-  	\`slug\` text NOT NULL,
+  	\`slug\` text,
+  	\`publish_on\` text,
   	\`updated_at\` text DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ', 'now')) NOT NULL,
   	\`created_at\` text DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ', 'now')) NOT NULL,
+  	\`_status\` text DEFAULT 'draft',
   	FOREIGN KEY (\`image_id\`) REFERENCES \`media\`(\`id\`) ON UPDATE no action ON DELETE set null,
   	FOREIGN KEY (\`meta_image_id\`) REFERENCES \`media\`(\`id\`) ON UPDATE no action ON DELETE set null
   );
@@ -263,6 +310,40 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   await db.run(sql`CREATE INDEX \`categories_slug_idx\` ON \`categories\` (\`slug\`);`)
   await db.run(sql`CREATE INDEX \`categories_updated_at_idx\` ON \`categories\` (\`updated_at\`);`)
   await db.run(sql`CREATE INDEX \`categories_created_at_idx\` ON \`categories\` (\`created_at\`);`)
+  await db.run(sql`CREATE INDEX \`categories__status_idx\` ON \`categories\` (\`_status\`);`)
+  await db.run(sql`CREATE TABLE \`_categories_v\` (
+  	\`id\` integer PRIMARY KEY NOT NULL,
+  	\`parent_id\` integer,
+  	\`version_image_id\` integer,
+  	\`version_name\` text,
+  	\`version_description\` text,
+  	\`version_meta_title\` text,
+  	\`version_meta_description\` text,
+  	\`version_meta_image_id\` integer,
+  	\`version_slug\` text,
+  	\`version_publish_on\` text,
+  	\`version_updated_at\` text,
+  	\`version_created_at\` text,
+  	\`version__status\` text DEFAULT 'draft',
+  	\`created_at\` text DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ', 'now')) NOT NULL,
+  	\`updated_at\` text DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ', 'now')) NOT NULL,
+  	\`latest\` integer,
+  	FOREIGN KEY (\`parent_id\`) REFERENCES \`categories\`(\`id\`) ON UPDATE no action ON DELETE set null,
+  	FOREIGN KEY (\`version_image_id\`) REFERENCES \`media\`(\`id\`) ON UPDATE no action ON DELETE set null,
+  	FOREIGN KEY (\`version_meta_image_id\`) REFERENCES \`media\`(\`id\`) ON UPDATE no action ON DELETE set null
+  );
+  `)
+  await db.run(sql`CREATE INDEX \`_categories_v_parent_idx\` ON \`_categories_v\` (\`parent_id\`);`)
+  await db.run(sql`CREATE INDEX \`_categories_v_version_version_image_idx\` ON \`_categories_v\` (\`version_image_id\`);`)
+  await db.run(sql`CREATE INDEX \`_categories_v_version_version_name_idx\` ON \`_categories_v\` (\`version_name\`);`)
+  await db.run(sql`CREATE INDEX \`_categories_v_version_meta_version_meta_image_idx\` ON \`_categories_v\` (\`version_meta_image_id\`);`)
+  await db.run(sql`CREATE INDEX \`_categories_v_version_version_slug_idx\` ON \`_categories_v\` (\`version_slug\`);`)
+  await db.run(sql`CREATE INDEX \`_categories_v_version_version_updated_at_idx\` ON \`_categories_v\` (\`version_updated_at\`);`)
+  await db.run(sql`CREATE INDEX \`_categories_v_version_version_created_at_idx\` ON \`_categories_v\` (\`version_created_at\`);`)
+  await db.run(sql`CREATE INDEX \`_categories_v_version_version__status_idx\` ON \`_categories_v\` (\`version__status\`);`)
+  await db.run(sql`CREATE INDEX \`_categories_v_created_at_idx\` ON \`_categories_v\` (\`created_at\`);`)
+  await db.run(sql`CREATE INDEX \`_categories_v_updated_at_idx\` ON \`_categories_v\` (\`updated_at\`);`)
+  await db.run(sql`CREATE INDEX \`_categories_v_latest_idx\` ON \`_categories_v\` (\`latest\`);`)
   await db.run(sql`CREATE TABLE \`media\` (
   	\`id\` integer PRIMARY KEY NOT NULL,
   	\`alt\` text,
@@ -657,6 +738,7 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   	\`general_description\` text NOT NULL,
   	\`general_favicon_url_id\` integer NOT NULL,
   	\`general_og_image_url_id\` integer NOT NULL,
+  	\`general_currency\` text DEFAULT 'usd' NOT NULL,
   	\`navbar_logo_image_url_id\` integer NOT NULL,
   	\`navbar_logo_height\` numeric,
   	\`navbar_logo_width\` numeric,
@@ -743,7 +825,10 @@ export async function down({ db, payload, req }: MigrateDownArgs): Promise<void>
   await db.run(sql`DROP TABLE \`_pages_v_rels\`;`)
   await db.run(sql`DROP TABLE \`food_items\`;`)
   await db.run(sql`DROP TABLE \`food_items_rels\`;`)
+  await db.run(sql`DROP TABLE \`_food_items_v\`;`)
+  await db.run(sql`DROP TABLE \`_food_items_v_rels\`;`)
   await db.run(sql`DROP TABLE \`categories\`;`)
+  await db.run(sql`DROP TABLE \`_categories_v\`;`)
   await db.run(sql`DROP TABLE \`media\`;`)
   await db.run(sql`DROP TABLE \`forms_blocks_checkbox\`;`)
   await db.run(sql`DROP TABLE \`forms_blocks_country\`;`)

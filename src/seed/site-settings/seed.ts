@@ -1,31 +1,12 @@
 import { collectionSlug } from '@contentql/core'
 import configPromise from '@payload-config'
-import { Page } from '@payload-types'
 import { Ora } from 'ora'
 import path from 'path'
 import { getPayload } from 'payload'
 
 const payload = await getPayload({ config: configPromise })
 
-export const seedSiteSettings = async ({
-  authorDetailsLink,
-  tagDetailsLink,
-  blogDetailsLink,
-  authorPages,
-  blogsPage,
-  tagsPages,
-  contactPage,
-  spinner,
-}: {
-  authorDetailsLink: Page
-  tagDetailsLink: Page
-  blogDetailsLink: Page
-  spinner: Ora
-  tagsPages: Page
-  blogsPage: Page
-  authorPages: Page
-  contactPage: Page
-}) => {
+export const seedSiteSettings = async ({ spinner }: { spinner: Ora }) => {
   spinner.start('Started creating site-settings...')
 
   try {
@@ -34,7 +15,7 @@ export const seedSiteSettings = async ({
       data: {
         alt: 'og-image',
       },
-      filePath: path.join(process.cwd(), '/public/images/seed/og-image.png'),
+      filePath: path.join(process.cwd(), '/public/images/og-image.webp'),
     })
 
     const faviconUrl = await payload.create({
@@ -42,186 +23,39 @@ export const seedSiteSettings = async ({
       data: {
         alt: 'og-image',
       },
-      filePath: path.join(process.cwd(), '/public/images/seed/bolt-logo.png'),
+      filePath: path.join(
+        process.cwd(),
+        '/public/images/hotel-chiranjeevi-logo.svg',
+      ),
     })
 
     const result = await payload.updateGlobal({
       slug: collectionSlug['site-settings'],
       data: {
         general: {
-          title: 'Bolt',
-          description: 'A Youtuber & Podcaster theme',
+          title: 'Hotel Chiranjeevi',
+          description: 'Welcome to Hotel Chiranjeevi!',
           keywords: ['ContentQL', 'Payload CMS', 'NextJS'],
           faviconUrl: faviconUrl.id,
           ogImageUrl: ogImageUrl.id,
+          currency: 'inr',
         },
         navbar: {
           logo: {
             imageUrl: faviconUrl.id,
-            description: 'Bolt Logo',
+            description: 'Hotel Chiranjeevi Logo',
             height: 24,
             width: 24,
           },
-          menuLinks: [
-            {
-              group: false,
-              menuLink: {
-                type: 'reference',
-                label: '💎 Posts',
-                page: {
-                  relationTo: 'pages',
-                  value: blogsPage.id,
-                },
-              },
-
-              menuLinkGroup: {
-                groupLinks: [],
-              },
-            },
-            {
-              group: false,
-              menuLink: {
-                type: 'reference',
-                label: '👥 Team',
-                page: {
-                  relationTo: 'pages',
-                  value: authorPages.id,
-                },
-              },
-
-              menuLinkGroup: {
-                groupLinks: [],
-              },
-            },
-            {
-              group: false,
-              menuLink: {
-                type: 'reference',
-                label: '☎️ Contact',
-                page: {
-                  relationTo: 'pages',
-                  value: contactPage.id,
-                },
-              },
-
-              menuLinkGroup: {
-                groupLinks: [],
-              },
-            },
-            {
-              group: false,
-              menuLink: {
-                type: 'reference',
-                label: '🔮 Categories',
-                page: {
-                  relationTo: 'pages',
-                  value: tagsPages.id,
-                },
-              },
-
-              menuLinkGroup: {
-                groupLinks: [],
-              },
-            },
-            {
-              group: true,
-              menuLink: {
-                type: 'reference',
-              },
-              menuLinkGroup: {
-                groupTitle: '📖 Learn',
-
-                groupLinks: [
-                  {
-                    type: 'custom',
-                    newTab: true,
-                    label: 'Youtube',
-                    url: 'https://youtube.com',
-                  },
-                  {
-                    type: 'custom',
-                    newTab: true,
-                    label: 'Twitter',
-                    url: 'https://twitter.com',
-                  },
-                ],
-              },
-            },
-            {
-              group: false,
-              menuLink: {
-                type: 'custom',
-                label: '🗺️ Style Guide',
-                url: '/post/style-guide-all-supported-elements',
-              },
-              menuLinkGroup: {
-                groupLinks: [],
-              },
-            },
-          ],
         },
         footer: {
           logo: {
             height: 24,
             width: 24,
-            description: 'Youtuber & Podcaster',
+            description: 'Hotel Chirangeevi',
             imageUrl: faviconUrl.id,
           },
           copyright: '© 2024 all rights reserved',
-          footerLinks: [
-            {
-              group: true,
-              menuLink: {
-                type: 'reference',
-              },
-              menuLinkGroup: {
-                groupTitle: '📚 Content',
-
-                groupLinks: [
-                  {
-                    type: 'reference',
-                    label: 'Posts',
-                    page: {
-                      relationTo: 'pages',
-                      value: blogsPage.id,
-                    },
-                  },
-                  {
-                    type: 'reference',
-                    label: 'Categories',
-                    page: {
-                      relationTo: 'pages',
-                      value: tagsPages.id,
-                    },
-                  },
-                ],
-              },
-            },
-            {
-              group: true,
-              menuLink: {
-                type: 'reference',
-              },
-              menuLinkGroup: {
-                groupTitle: '🔗 Links',
-
-                groupLinks: [
-                  {
-                    type: 'custom',
-                    label: 'Youtube',
-                    newTab: true,
-                    url: 'https://youtube.com',
-                  },
-                  {
-                    type: 'custom',
-                    label: 'Podcast',
-                    newTab: true,
-                    url: 'https://spotify.com',
-                  },
-                ],
-              },
-            },
-          ],
           socialLinks: [
             {
               platform: 'youtube',
@@ -240,6 +74,45 @@ export const seedSiteSettings = async ({
               value: 'https://instagram.com',
             },
           ],
+        },
+        themeSettings: {
+          lightMode: {
+            primary: '#C62E2E',
+            background: '#FEF3E2',
+            text: '#1A1A19',
+            foreground: '#FBD288',
+            popover: '#000000',
+            border: '#CDC2A5',
+          },
+
+          darkMode: {
+            primary: '#F15A59',
+            background: '#191919',
+            text: '#FFFAFA',
+            foreground: '#F8C4B4',
+            popover: '#000000',
+            border: '#323232',
+          },
+
+          fonts: {
+            display: {
+              type: 'googleFont',
+              customFont: null,
+              remoteFont:
+                'https://fonts.googleapis.com/css2?family=Finger+Paint&display=swap',
+              fontName: 'Finger Paint',
+            },
+
+            body: {
+              type: 'googleFont',
+              customFont: null,
+              remoteFont:
+                'https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,100..900;1,100..900&display=swap',
+              fontName: 'Work Sans',
+            },
+          },
+
+          radius: 'medium',
         },
       },
     })

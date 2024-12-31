@@ -1,5 +1,6 @@
 'use client'
 
+import { formatCurrency } from '@contentql/core/client'
 import { FoodItem } from '@payload-types'
 import { useDebouncedEffect } from '@payloadcms/ui'
 import { Heart, X } from 'lucide-react'
@@ -19,6 +20,8 @@ import {
   DrawerHeader,
 } from '@/components/common/Drawer'
 import { useCartContext } from '@/utils/cartContext'
+import { getCurrencySymbol } from '@/utils/currency'
+import { useMetadata } from '@/utils/metadataContext'
 
 import OrderInput from './OrderInput'
 
@@ -27,6 +30,14 @@ const FoodCard = ({ foodItem }: { foodItem: FoodItem }) => {
   const [count, setCount] = useState(1)
   const [isPending, setIsPending] = useState(false)
   const { setCartItems, setCollectionItems, collectionItems } = useCartContext()
+  const { general } = useMetadata()
+
+  const formattedCurrency = formatCurrency({
+    amount: foodItem.price,
+    currencyCode: general.currency,
+  })
+
+  const currencySymbol = getCurrencySymbol(general.currency)
 
   // useDebouncedEffect hook will set loading state to false again after 300ms
   useDebouncedEffect(
@@ -93,7 +104,7 @@ const FoodCard = ({ foodItem }: { foodItem: FoodItem }) => {
     <>
       <div
         onClick={() => setOpen(current => !current)}
-        className='my-4 flex w-full cursor-pointer justify-between gap-2 rounded-md border p-4 shadow-md'>
+        className='mb-4 mt-2 flex w-full cursor-pointer justify-between gap-2 rounded-md border p-4 shadow-md'>
         <div>
           <div className='flex items-center gap-2'>
             {type === 'nonVeg' ? <NonVegLogo /> : <VegLogo />}
@@ -107,23 +118,16 @@ const FoodCard = ({ foodItem }: { foodItem: FoodItem }) => {
 
           <p className='mt-2 font-display'>{name}</p>
 
-          <p className='text-sm font-semibold'>₹ {price}</p>
+          <p className='text-sm font-semibold'>{formattedCurrency}</p>
 
           <p className='line-clamp-2 text-sm text-text/70'>{description}</p>
         </div>
 
         <div className='relative'>
-          <div className='relative size-32 flex-shrink-0 overflow-hidden rounded-sm'>
+          <div className='relative size-32 flex-shrink-0 overflow-hidden rounded-sm bg-foreground/50'>
             {coverPic ? (
               <Image src={coverPic.url} fill alt={coverPic.alt} sizes='600px' />
-            ) : (
-              <Image
-                src={'/mutton-biryani.webp'}
-                fill
-                alt='Mutton Biryani'
-                sizes='600px'
-              />
-            )}
+            ) : null}
           </div>
 
           <div className='absolute -bottom-2 flex w-full justify-center gap-2'>
@@ -232,7 +236,7 @@ const FoodCard = ({ foodItem }: { foodItem: FoodItem }) => {
 
                 <p className='mt-2 line-clamp-1 font-display text-lg'>{name}</p>
 
-                <p className='text-sm font-semibold'>₹ {price}</p>
+                <p className='text-sm font-semibold'>{formattedCurrency}</p>
 
                 <p className='text-sm text-text/70'>{description}</p>
               </div>
@@ -246,7 +250,7 @@ const FoodCard = ({ foodItem }: { foodItem: FoodItem }) => {
                 />
 
                 <Button className='flex-grow' onClick={handleAddItem}>
-                  Add Item | ₹ {price * count}
+                  Add Item | {`${currencySymbol} ${price * count}`}
                 </Button>
               </DrawerFooter>
             </div>

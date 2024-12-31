@@ -3,7 +3,6 @@ import { ListType } from '@payload-types'
 import { unstable_cache } from 'next/cache'
 import { getPayload } from 'payload'
 import configPromise from 'payload.config'
-import { Suspense } from 'react'
 
 import FoodItems from './components/FoodItems'
 
@@ -38,11 +37,7 @@ const List: React.FC<ListProps> = async ({ params, ...block }) => {
     { tags: ['list-categories'] },
   )()
 
-  return (
-    <Suspense>
-      <FoodItems foodItems={foodItems} categories={categories} />
-    </Suspense>
-  )
+  return <FoodItems foodItems={foodItems} categories={categories} />
 }
 
 export default List

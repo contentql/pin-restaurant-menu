@@ -39,7 +39,7 @@ const Footer = ({ metadata }: { metadata: SiteSetting }) => {
 
   return (
     <footer className='space-y-8 border-t pt-8'>
-      <div className='container sm:flex sm:justify-between'>
+      <div className='container sm:flex sm:justify-center'>
         <div className='space-y-4'>
           {logoDetails.url && (
             <Link href='/'>
@@ -48,6 +48,7 @@ const Footer = ({ metadata }: { metadata: SiteSetting }) => {
                 alt={logoDetails.alt}
                 width={40}
                 height={40}
+                className='mx-auto dark:invert'
               />
             </Link>
           )}
@@ -55,32 +56,6 @@ const Footer = ({ metadata }: { metadata: SiteSetting }) => {
           {logo.description && (
             <p className='text-secondary '>{logo.description}</p>
           )}
-        </div>
-
-        <div className='mt-8 flex flex-wrap gap-8 sm:mt-0'>
-          {menuLinks.map(({ children, label }, index) => {
-            if (children) {
-              return (
-                <div className='text-sm' key={index}>
-                  <p className='mb-4 text-secondary'>{label}</p>
-
-                  <div className='space-y-2'>
-                    {children.map(details => (
-                      <Link
-                        href={details.href}
-                        key={details.label}
-                        className='block'
-                        target={details.newTab ? '_blank' : '_self'}>
-                        {details.label}
-                      </Link>
-                    ))}
-                  </div>
-                </div>
-              )
-            }
-
-            return null
-          })}
         </div>
       </div>
 
@@ -99,7 +74,7 @@ const Footer = ({ metadata }: { metadata: SiteSetting }) => {
                       href={value}
                       target='_blank'
                       aria-label={`${platform} link`}>
-                      <Component className='size-6 [&_path]:fill-secondary' />
+                      <Component className='[&_path]:fill-secondary size-6' />
                     </Link>
                   </li>
                 ) : null

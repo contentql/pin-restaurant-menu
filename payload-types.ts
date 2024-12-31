@@ -350,10 +350,18 @@ export interface FoodItem {
   type: 'veg' | 'nonVeg';
   categories?: (number | Category)[] | null;
   price: number;
+  /**
+   * Check to mark food-item as special, food-item will be shown with special badge
+   */
   special: boolean;
   gallery?: (number | Media)[] | null;
+  /**
+   * Save it as draft to schedule.
+   */
+  publishOn?: string | null;
   updatedAt: string;
   createdAt: string;
+  _status?: ('draft' | 'published') | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -379,8 +387,13 @@ export interface Category {
    * Contains only lowercase letters, numbers, and dashes.
    */
   slug: string;
+  /**
+   * Save it as draft to schedule.
+   */
+  publishOn?: string | null;
   updatedAt: string;
   createdAt: string;
+  _status?: ('draft' | 'published') | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -567,8 +580,10 @@ export interface FoodItemsSelect<T extends boolean = true> {
   price?: T;
   special?: T;
   gallery?: T;
+  publishOn?: T;
   updatedAt?: T;
   createdAt?: T;
+  _status?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -586,8 +601,10 @@ export interface CategoriesSelect<T extends boolean = true> {
         image?: T;
       };
   slug?: T;
+  publishOn?: T;
   updatedAt?: T;
   createdAt?: T;
+  _status?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -829,6 +846,30 @@ export interface SiteSetting {
      */
     ogImageUrl: number | Media;
     keywords?: string[] | null;
+    /**
+     * This field is used to format currency values & used as default currency for ecommerce-theme
+     */
+    currency:
+      | 'usd'
+      | 'eur'
+      | 'inr'
+      | 'gbp'
+      | 'jpy'
+      | 'cad'
+      | 'aud'
+      | 'chf'
+      | 'cny'
+      | 'hkd'
+      | 'sgd'
+      | 'mxn'
+      | 'brl'
+      | 'rub'
+      | 'krw'
+      | 'zar'
+      | 'try'
+      | 'sar'
+      | 'aed'
+      | 'pln';
   };
   navbar: {
     logo: BrandLogo;
@@ -1017,6 +1058,7 @@ export interface SiteSettingsSelect<T extends boolean = true> {
         faviconUrl?: T;
         ogImageUrl?: T;
         keywords?: T;
+        currency?: T;
       };
   navbar?:
     | T
