@@ -21,13 +21,13 @@ const PageNotFound: React.FC = () => {
     return (
       <section className='flex min-h-screen flex-col items-center justify-center'>
         <h1 className='font-display text-4xl font-semibold'>
-          Welcome to ⚡Bolt Theme
+          Welcome to Restaurant Theme
         </h1>
 
         <p className='my-4 p-2 text-center'>
           {isPending
             ? '⏰please hold-on this process might take some time'
-            : 'Click below👇 to instantly load demo content-blogs, authors, tags, and pages'}
+            : 'Click below👇 to instantly load demo food-items & categories'}
         </p>
 
         <Button
