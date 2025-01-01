@@ -71,6 +71,7 @@ import { ColorField as ColorField_6a7c9851ebd211fa288fcd19fbdf430e } from '@cont
 import { RadiusField as RadiusField_6a7c9851ebd211fa288fcd19fbdf430e } from '@contentql/core/client'
 import { default as default_fe373fe27f1063cfe032cdbcc74c397a } from '/src/payload/style/icons/Icon.tsx'
 import { default as default_d04d5322bc326e90e9d559df021a5610 } from '/src/payload/style/icons/Logo.tsx'
+import { default as default_faec0da5103f6de44ae1b3795285dcaf } from '@/components/RestaurantQRCode'
 
 export const importMap = {
   "@contentql/core/client#CustomSlugField": CustomSlugField_6a7c9851ebd211fa288fcd19fbdf430e,
@@ -145,5 +146,6 @@ export const importMap = {
   "@contentql/core/client#ColorField": ColorField_6a7c9851ebd211fa288fcd19fbdf430e,
   "@contentql/core/client#RadiusField": RadiusField_6a7c9851ebd211fa288fcd19fbdf430e,
   "/src/payload/style/icons/Icon.tsx#default": default_fe373fe27f1063cfe032cdbcc74c397a,
-  "/src/payload/style/icons/Logo.tsx#default": default_d04d5322bc326e90e9d559df021a5610
+  "/src/payload/style/icons/Logo.tsx#default": default_d04d5322bc326e90e9d559df021a5610,
+  "@/components/RestaurantQRCode#default": default_faec0da5103f6de44ae1b3795285dcaf
 }

@@ -22,6 +22,7 @@ export default cqlConfig({
         Logo: '/src/payload/style/icons/Logo.tsx',
         Icon: '/src/payload/style/icons/Icon.tsx',
       },
+      beforeDashboard: ['@/components/RestaurantQRCode'],
     },
   },
   cors: [env.PAYLOAD_URL],

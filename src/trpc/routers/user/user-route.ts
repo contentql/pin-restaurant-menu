@@ -48,8 +48,6 @@ export const userRouter = router({
       const { user } = ctx
       const { confirmPassword, ...data } = input
 
-      console.log({ data })
-
       if (data.password && data.password !== confirmPassword) {
         throw new TRPCError({
           code: 'BAD_REQUEST',
@@ -58,8 +56,6 @@ export const userRouter = router({
       }
 
       try {
-        console.log({ data })
-
         const updatedUser = await payload.update({
           collection: collectionSlug.users,
           id: user.id,

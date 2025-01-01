@@ -1,2 +1,6 @@
 @use '@payloadcms/next/css';
 @use '@contentql/core/styles';
+
+.download-qr-btn {
+  width: max-content;
+}
