@@ -22,14 +22,15 @@ const Cart = () => {
 
   // on quantity change updating the cart items count
   const handleQuantityChange = ({
-    count,
+    type,
     itemIndex,
   }: {
-    count: number
+    type: 'inc' | 'dec'
     itemIndex: number
   }) => {
-    // if quantity is 0 removing item from cart
-    if (count === 0) {
+    const item = cartItems.find((_item, index) => index === itemIndex)
+
+    if (type === 'dec' && item && item.quantity === 1) {
       return setCartItems(current => {
         let frontPart = current.slice(0, itemIndex)
         let lastPart = current.slice(itemIndex + 1)
@@ -41,7 +42,10 @@ const Cart = () => {
     setCartItems(current =>
       current.map((cartItem, i) => {
         if (i === itemIndex) {
-          return { ...cartItem, quantity: count }
+          return {
+            ...cartItem,
+            quantity: cartItem.quantity + (type === 'dec' ? -1 : 1),
+          }
         }
 
         return cartItem
@@ -88,9 +92,9 @@ const Cart = () => {
                   <div className='flex items-center gap-2'>
                     <OrderInput
                       size='small'
-                      defaultValue={quantity}
-                      onChange={count => {
-                        handleQuantityChange({ count, itemIndex: index })
+                      value={quantity}
+                      onChange={type => {
+                        handleQuantityChange({ type, itemIndex: index })
                       }}
                     />
                     <span className='text-nowrap font-semibold'>

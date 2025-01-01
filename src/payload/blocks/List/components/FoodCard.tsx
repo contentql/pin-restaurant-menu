@@ -57,15 +57,24 @@ const FoodCard = ({ foodItem }: { foodItem: FoodItem }) => {
 
   // this function adds items to cart with quantity
   const handleAddItem = () => {
-    setCartItems(current =>
-      current.map(item => {
-        if (item.id === id) {
-          return { ...item, quantity: item.quantity + count }
-        }
+    const alreadyAddedCartItem = cartItems.find(item => item.id === foodItem.id)
 
-        return item
-      }),
-    )
+    if (alreadyAddedCartItem) {
+      setCartItems(current =>
+        current.map(item => {
+          if (item.id === id) {
+            return { ...item, quantity: item.quantity + count }
+          }
+
+          return item
+        }),
+      )
+    }
+    // If item not added to cart adding that with that quantity
+    else {
+      setCartItems(current => [...current, { ...foodItem, quantity: count }])
+    }
+
     setOpen(false)
     setCount(1)
   }
@@ -123,31 +132,38 @@ const FoodCard = ({ foodItem }: { foodItem: FoodItem }) => {
           <div className='absolute -bottom-2 flex w-full justify-center gap-2'>
             {cartItem ? (
               <OrderInput
-                defaultValue={cartItem.quantity}
-                onChange={value => {
+                value={cartItem.quantity}
+                onChange={type => {
                   const addedItemIndex = cartItems.findIndex(
                     item => item.id === foodItem.id,
                   )
 
-                  // if quantity is 0 removing item from cart
-                  if (value === 0) {
-                    return setCartItems(current => {
-                      let frontPart = current.slice(0, addedItemIndex)
-                      let lastPart = current.slice(addedItemIndex + 1)
+                  if (addedItemIndex >= 0) {
+                    const item = cartItems[addedItemIndex]
 
-                      return [...frontPart, ...lastPart]
-                    })
+                    if (type === 'dec' && item && item.quantity === 1) {
+                      return setCartItems(current => {
+                        let frontPart = current.slice(0, addedItemIndex)
+                        let lastPart = current.slice(addedItemIndex + 1)
+
+                        return [...frontPart, ...lastPart]
+                      })
+                    }
+
+                    setCartItems(current =>
+                      current.map((cartItem, i) => {
+                        if (i === addedItemIndex) {
+                          return {
+                            ...cartItem,
+                            quantity:
+                              cartItem.quantity + (type === 'dec' ? -1 : 1),
+                          }
+                        }
+
+                        return cartItem
+                      }),
+                    )
                   }
-
-                  setCartItems(current =>
-                    current.map((cartItem, i) => {
-                      if (i === addedItemIndex) {
-                        return { ...cartItem, quantity: value }
-                      }
-
-                      return cartItem
-                    }),
-                  )
                 }}
               />
             ) : (
@@ -260,9 +276,16 @@ const FoodCard = ({ foodItem }: { foodItem: FoodItem }) => {
 
               <DrawerFooter className='flex-row items-center gap-2  px-0'>
                 <OrderInput
-                  defaultValue={count}
-                  onChange={value => {
-                    setCount(value)
+                  value={count}
+                  onChange={type => {
+                    setCount(current => {
+                      if (type === 'inc') {
+                        return current + 1
+                      } else if (type === 'dec' && current === 1) {
+                        return current
+                      }
+                      return current - 1
+                    })
                   }}
                 />
 
