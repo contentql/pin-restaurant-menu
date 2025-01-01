@@ -1,9 +1,8 @@
 'use client'
 
 import { FoodItem } from '@payload-types'
-import { useDebouncedEffect } from '@payloadcms/ui'
+import { AnimatePresence, motion } from 'framer-motion'
 import { Heart, ShoppingCart, Trash2, X } from 'lucide-react'
-import { useState } from 'react'
 
 import { NoCollectionLogo, NonVegLogo, VegLogo } from '@/components/SVG'
 import Button from '@/components/common/Button'
@@ -18,30 +17,19 @@ import {
 import { useCartContext } from '@/utils/cartContext'
 
 const CollectionItem = ({ item, index }: { item: FoodItem; index: number }) => {
-  const [isPending, setIsPending] = useState(false)
   const { collectionItems, setCollectionItems, cartItems, setCartItems } =
     useCartContext()
-
-  useDebouncedEffect(
-    () => {
-      setIsPending(false)
-    },
-    [isPending],
-    300,
-  )
 
   const { name, type, id, price } = item
 
   // Add's items from collection to cart
   const handleAddItemToCart = (item: FoodItem) => {
-    setIsPending(true)
-
     const itemAlreadyExists = cartItems.findIndex(
       cartItem => cartItem.id === item.id,
     )
 
     if (itemAlreadyExists >= 0) {
-      return setCartItems(current =>
+      setCartItems(current =>
         current.map((cartItem, index) => {
           if (index === itemAlreadyExists) {
             return { ...cartItem, quantity: cartItem.quantity + 1 }
@@ -50,15 +38,17 @@ const CollectionItem = ({ item, index }: { item: FoodItem; index: number }) => {
           return cartItem
         }),
       )
+    } else {
+      setCartItems(current => {
+        return [...current, { ...item, quantity: 1 }]
+      })
     }
 
-    setCartItems(current => {
-      return [...current, { ...item, quantity: 1 }]
-    })
+    setCollectionItems(current => current.filter(item => item.id !== id))
   }
 
   return (
-    <div className='flex justify-between text-sm'>
+    <motion.div className='flex justify-between text-sm' layout>
       <div className='flex items-center gap-2'>
         {type === 'nonVeg' ? (
           <NonVegLogo className='size-4 flex-shrink-0' />
@@ -74,7 +64,6 @@ const CollectionItem = ({ item, index }: { item: FoodItem; index: number }) => {
         <Button
           variant='outline'
           size='icon'
-          isLoading={isPending}
           onClick={() => {
             handleAddItemToCart(collectionItems[index])
           }}>
@@ -92,7 +81,7 @@ const CollectionItem = ({ item, index }: { item: FoodItem; index: number }) => {
           <Trash2 size={16} />
         </Button>
       </div>
-    </div>
+    </motion.div>
   )
 }
 
@@ -123,10 +112,14 @@ const Collection = () => {
           </DrawerHeader>
 
           {collectionItems.length ? (
-            <div className='space-y-4 pb-8'>
-              {collectionItems.map((item, index) => {
-                return <CollectionItem key={index} index={index} item={item} />
-              })}
+            <div className='flex flex-col gap-y-4 pb-8'>
+              <AnimatePresence>
+                {collectionItems.map((item, index) => {
+                  return (
+                    <CollectionItem key={index} index={index} item={item} />
+                  )
+                })}
+              </AnimatePresence>
             </div>
           ) : (
             <div className='flex flex-col items-center justify-center pb-8'>

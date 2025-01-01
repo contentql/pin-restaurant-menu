@@ -110,7 +110,9 @@ const Navbar = ({
           )}
 
           <ToggleTheme />
-          <ProfileDropdown user={user} navLinks={navLinks} />
+          {navLinks.length ? (
+            <ProfileDropdown user={user} navLinks={navLinks} />
+          ) : null}
         </div>
       </div>
     </header>

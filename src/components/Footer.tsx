@@ -2,7 +2,6 @@ import type { SiteSetting } from '@payload-types'
 import Image from 'next/image'
 import Link from 'next/link'
 
-import { generateMenuLinks } from '@/utils/generateMenuLinks'
 import { logoMapping } from '@/utils/logoMapping'
 
 const Footer = ({ metadata }: { metadata: SiteSetting }) => {
@@ -35,11 +34,9 @@ const Footer = ({ metadata }: { metadata: SiteSetting }) => {
     return null
   }
 
-  const menuLinks = footerLinks?.length ? generateMenuLinks(footerLinks) : []
-
   return (
     <footer className='space-y-8 border-t pt-8'>
-      <div className='container sm:flex sm:justify-center'>
+      <div className='container text-center sm:flex sm:justify-center'>
         <div className='space-y-4'>
           {logoDetails.url && (
             <Link href='/'>
@@ -54,7 +51,7 @@ const Footer = ({ metadata }: { metadata: SiteSetting }) => {
           )}
 
           {logo.description && (
-            <p className='text-secondary '>{logo.description}</p>
+            <p className='text-secondary'>{logo.description}</p>
           )}
         </div>
       </div>

@@ -2,7 +2,6 @@
 
 import { formatCurrency } from '@contentql/core/client'
 import { FoodItem } from '@payload-types'
-import { useDebouncedEffect } from '@payloadcms/ui'
 import { Heart, X } from 'lucide-react'
 import Image from 'next/image'
 import { useState } from 'react'
@@ -28,8 +27,9 @@ import OrderInput from './OrderInput'
 const FoodCard = ({ foodItem }: { foodItem: FoodItem }) => {
   const [open, setOpen] = useState(false)
   const [count, setCount] = useState(1)
-  const [isPending, setIsPending] = useState(false)
-  const { setCartItems, setCollectionItems, collectionItems } = useCartContext()
+
+  const { setCartItems, setCollectionItems, collectionItems, cartItems } =
+    useCartContext()
   const { general } = useMetadata()
 
   const formattedCurrency = formatCurrency({
@@ -38,17 +38,6 @@ const FoodCard = ({ foodItem }: { foodItem: FoodItem }) => {
   })
 
   const currencySymbol = getCurrencySymbol(general.currency)
-
-  // useDebouncedEffect hook will set loading state to false again after 300ms
-  useDebouncedEffect(
-    () => {
-      if (isPending) {
-        setIsPending(false)
-      }
-    },
-    [isPending],
-    300,
-  )
 
   const { name, price, type, gallery, description, special, id } = foodItem
 
@@ -99,6 +88,7 @@ const FoodCard = ({ foodItem }: { foodItem: FoodItem }) => {
 
   // boolean for highlighting heart icon
   const isActive = collectionItems.find(item => item.id === id)
+  const cartItem = cartItems.find(item => item.id === id)
 
   return (
     <>
@@ -131,35 +121,62 @@ const FoodCard = ({ foodItem }: { foodItem: FoodItem }) => {
           </div>
 
           <div className='absolute -bottom-2 flex w-full justify-center gap-2'>
-            <Button
-              className=''
-              isLoading={isPending}
-              onClick={e => {
-                e.stopPropagation()
-
-                setIsPending(true)
-
-                setCartItems(current => {
-                  // later updating the local state
-                  const addedItemIndex = current.findIndex(
+            {cartItem ? (
+              <OrderInput
+                defaultValue={cartItem.quantity}
+                onChange={value => {
+                  const addedItemIndex = cartItems.findIndex(
                     item => item.id === foodItem.id,
                   )
 
-                  if (addedItemIndex >= 0) {
-                    return current.map((item, index) => {
-                      if (index === addedItemIndex) {
-                        return { ...item, quantity: item.quantity + 1 }
+                  // if quantity is 0 removing item from cart
+                  if (value === 0) {
+                    return setCartItems(current => {
+                      let frontPart = current.slice(0, addedItemIndex)
+                      let lastPart = current.slice(addedItemIndex + 1)
+
+                      return [...frontPart, ...lastPart]
+                    })
+                  }
+
+                  setCartItems(current =>
+                    current.map((cartItem, i) => {
+                      if (i === addedItemIndex) {
+                        return { ...cartItem, quantity: value }
                       }
 
-                      return item
-                    })
-                  } else {
-                    return [...current, { ...foodItem, quantity: 1 }]
-                  }
-                })
-              }}>
-              ADD +
-            </Button>
+                      return cartItem
+                    }),
+                  )
+                }}
+              />
+            ) : (
+              <Button
+                onClick={e => {
+                  e.stopPropagation()
+
+                  setCartItems(current => {
+                    // later updating the local state
+                    const addedItemIndex = current.findIndex(
+                      item => item.id === foodItem.id,
+                    )
+
+                    if (addedItemIndex >= 0) {
+                      return current.map((item, index) => {
+                        if (index === addedItemIndex) {
+                          return { ...item, quantity: item.quantity + 1 }
+                        }
+
+                        return item
+                      })
+                    } else {
+                      return [...current, { ...foodItem, quantity: 1 }]
+                    }
+                  })
+                }}>
+                ADD +
+              </Button>
+            )}
 
             <Button
               variant='outline'

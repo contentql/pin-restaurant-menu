@@ -3,7 +3,7 @@
 import { Category, FoodItem } from '@payload-types'
 import { useDebouncedEffect } from '@payloadcms/ui'
 import { Search } from 'lucide-react'
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 import { NoItemsLogo } from '@/components/SVG'
 import { Input } from '@/components/common/Input'
@@ -46,7 +46,33 @@ const FoodItems = ({
           : {}),
         ...(specialItems ? { special: specialItems } : {}),
       },
-      { ...(!filtersApplied ? { placeholderData: foodItems } : {}) },
+      {
+        ...(!filtersApplied ? { placeholderData: foodItems } : {}),
+        select: list => {
+          const items = list?.length
+            ? list.reduce<Record<string, FoodItem[]>>((acc, current) => {
+                const categories = current?.categories // Safely accessing
+
+                if (categories && categories.length) {
+                  categories.forEach(category => {
+                    if (typeof category === 'object' && category?.name) {
+                      // Ensure category and name exist
+                      if (acc[category.name]) {
+                        acc[category.name].push(current)
+                      } else {
+                        acc[category.name] = [current]
+                      }
+                    }
+                  })
+                }
+
+                return acc
+              }, {})
+            : {}
+
+          return Object.entries(items)
+        },
+      },
     )
 
   // This effect syncs the local-storage with cartContext
@@ -105,31 +131,6 @@ const FoodItems = ({
     800,
   )
 
-  const groupItems = useMemo(() => {
-    const items = foodItemsList?.length
-      ? foodItemsList.reduce<Record<string, FoodItem[]>>((acc, current) => {
-          const categories = current?.categories // Safely accessing
-
-          if (categories && categories.length) {
-            categories.forEach(category => {
-              if (typeof category === 'object' && category?.name) {
-                // Ensure category and name exist
-                if (acc[category.name]) {
-                  acc[category.name].push(current)
-                } else {
-                  acc[category.name] = [current]
-                }
-              }
-            })
-          }
-
-          return acc
-        }, {})
-      : {}
-
-    return Object.entries(items)
-  }, [foodItemsList])
-
   return (
     <section>
       <div className='flex items-center gap-2'>
@@ -147,8 +148,8 @@ const FoodItems = ({
         <FilterDrawer categories={categories} />
       </div>
 
-      {groupItems.length ? (
-        groupItems.map(([categoryName, list]) => (
+      {foodItemsList.length ? (
+        foodItemsList.map(([categoryName, list]) => (
           <div key={categoryName} className='mt-6'>
             <p className='font-semibold text-text/70'>{categoryName}</p>
             <div>

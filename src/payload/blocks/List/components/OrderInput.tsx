@@ -30,12 +30,15 @@ const OrderInput = ({
 
   return (
     <div
-      className={`flex items-center gap-2 rounded border ${size === 'small' ? 'h-8' : ''}`}>
+      className={`flex items-center gap-2 rounded border border-primary bg-background ${size === 'small' ? 'h-8' : ''}`}>
       <Button
         variant='outline'
         size='icon'
         className='border-none'
-        onClick={() => handleChange('dec')}>
+        onClick={e => {
+          e.stopPropagation()
+          handleChange('dec')
+        }}>
         <Minus size={16} />
       </Button>
 
@@ -47,7 +50,10 @@ const OrderInput = ({
         variant='outline'
         size='icon'
         className='border-none'
-        onClick={() => handleChange('inc')}>
+        onClick={e => {
+          e.stopPropagation()
+          handleChange('inc')
+        }}>
         <Plus size={16} />
       </Button>
     </div>
