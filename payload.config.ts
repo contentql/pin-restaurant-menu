@@ -34,7 +34,6 @@ export default cqlConfig({
 
   dbURI: env.DATABASE_URI,
   dbSecret: env.DATABASE_SECRET,
-  syncDB: false,
 
   s3: {
     accessKeyId: env.S3_ACCESS_KEY_ID,
