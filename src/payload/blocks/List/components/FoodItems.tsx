@@ -133,7 +133,7 @@ const FoodItems = ({
 
   return (
     <section>
-      <div className='flex items-center gap-2'>
+      <div className='sticky top-14 z-10 flex w-[calc(100%+1rem)] -translate-x-2 items-center gap-2 bg-gradient-to-b from-background via-background/95 via-70% to-transparent pb-8 pt-4'>
         <div className='relative flex-grow'>
           <Input
             placeholder='Search'
@@ -150,7 +150,7 @@ const FoodItems = ({
 
       {foodItemsList.length ? (
         foodItemsList.map(([categoryName, list]) => (
-          <div key={categoryName} className='mt-6'>
+          <div key={categoryName} className='mb-6'>
             <p className='font-semibold text-text/70'>{categoryName}</p>
             <div>
               {list.map(foodItem => {

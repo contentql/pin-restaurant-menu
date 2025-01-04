@@ -61,6 +61,9 @@ export default cqlConfig({
       slug: 'users',
       fields: [],
       auth: {
+        cookies: {
+          sameSite: 'None',
+        },
         verify: {
           generateEmailHTML: ({ token, user }) => {
             return UserAccountVerification({

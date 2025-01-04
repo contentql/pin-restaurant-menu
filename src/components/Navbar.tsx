@@ -110,6 +110,7 @@ const Navbar = ({
           )}
 
           <ToggleTheme />
+
           {navLinks.length ? (
             <ProfileDropdown user={user} navLinks={navLinks} />
           ) : null}

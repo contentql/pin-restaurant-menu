@@ -91,9 +91,17 @@ const Collection = () => {
   return (
     <Drawer>
       <DrawerTrigger asChild>
-        <Button className='px-2.5'>
-          <Heart size={20} />
-        </Button>
+        <div className='relative'>
+          <Button className='px-2.5'>
+            <Heart size={20} />
+          </Button>
+
+          {collectionItems.length ? (
+            <div className='absolute -right-4 -top-2 grid min-h-6 min-w-6 select-none place-items-center rounded-full bg-text px-1 text-xs text-background'>
+              <span className='leading-none'>{collectionItems.length}</span>
+            </div>
+          ) : null}
+        </div>
       </DrawerTrigger>
 
       <DrawerContent aria-describedby={undefined}>

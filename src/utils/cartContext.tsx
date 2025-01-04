@@ -47,6 +47,13 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
       ? cartItems.map(item => ({ id: item.id, quantity: item.quantity }))
       : []
 
+    setCollectionItems(current =>
+      current.filter(
+        collectionItem =>
+          !localStorageItems.find(item => collectionItem.id === item.id),
+      ),
+    )
+
     window.localStorage.setItem('cart', JSON.stringify(localStorageItems))
   }, [cartItems])
 

@@ -167,45 +167,47 @@ const FoodCard = ({ foodItem }: { foodItem: FoodItem }) => {
                 }}
               />
             ) : (
-              <Button
-                onClick={e => {
-                  e.stopPropagation()
+              <>
+                <Button
+                  onClick={e => {
+                    e.stopPropagation()
 
-                  setCartItems(current => {
-                    // later updating the local state
-                    const addedItemIndex = current.findIndex(
-                      item => item.id === foodItem.id,
-                    )
+                    setCartItems(current => {
+                      // later updating the local state
+                      const addedItemIndex = current.findIndex(
+                        item => item.id === foodItem.id,
+                      )
 
-                    if (addedItemIndex >= 0) {
-                      return current.map((item, index) => {
-                        if (index === addedItemIndex) {
-                          return { ...item, quantity: item.quantity + 1 }
-                        }
+                      if (addedItemIndex >= 0) {
+                        return current.map((item, index) => {
+                          if (index === addedItemIndex) {
+                            return { ...item, quantity: item.quantity + 1 }
+                          }
 
-                        return item
-                      })
-                    } else {
-                      return [...current, { ...foodItem, quantity: 1 }]
-                    }
-                  })
-                }}>
-                ADD +
-              </Button>
+                          return item
+                        })
+                      } else {
+                        return [...current, { ...foodItem, quantity: 1 }]
+                      }
+                    })
+                  }}>
+                  ADD +
+                </Button>
+
+                <Button
+                  variant='outline'
+                  onClick={e => {
+                    e.stopPropagation()
+                    handleAddCollection()
+                  }}
+                  className='bg-background px-3 hover:bg-foreground'>
+                  <Heart
+                    size={16}
+                    className={`${isActive ? 'fill-primary' : ''}`}
+                  />
+                </Button>
+              </>
             )}
-
-            <Button
-              variant='outline'
-              onClick={e => {
-                e.stopPropagation()
-                handleAddCollection()
-              }}
-              className='bg-background px-3 hover:bg-foreground'>
-              <Heart
-                size={16}
-                className={`${isActive ? 'fill-primary' : ''}`}
-              />
-            </Button>
           </div>
         </div>
       </div>

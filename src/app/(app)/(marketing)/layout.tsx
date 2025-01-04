@@ -35,7 +35,7 @@ const MarketingLayout = async ({ children }: { children: React.ReactNode }) => {
   return (
     <div className='grid min-h-screen w-full grid-rows-[1fr_auto]'>
       <Navbar metadata={metadata} user={user} />
-      <main className='container my-20'>
+      <main className='container my-16'>
         <NuqsAdapter>
           <FiltersProvider>{children}</FiltersProvider>
         </NuqsAdapter>

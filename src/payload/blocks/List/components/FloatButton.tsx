@@ -24,7 +24,7 @@ const FloatButton = () => {
   }
 
   return (
-    <div className='fixed bottom-4 left-4 grid w-max gap-2 overflow-hidden'>
+    <div className='fixed bottom-4 left-4 grid w-max gap-2'>
       <motion.div
         variants={variants}
         initial='initial'

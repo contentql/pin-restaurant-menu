@@ -1,7 +1,7 @@
 'use client'
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-// import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { httpBatchLink } from '@trpc/client'
 import { KBarProvider } from 'kbar'
 import { AppProgressBar as ProgressBar } from 'next-nprogress-bar'
@@ -49,7 +49,7 @@ export default function Provider({ children }: { children: React.ReactNode }) {
           <KBarProvider>
             <CartProvider>{children}</CartProvider>
           </KBarProvider>
-          {/* <ReactQueryDevtools initialIsOpen={false} /> */}
+          <ReactQueryDevtools initialIsOpen={false} />
         </QueryClientProvider>
       </trpc.Provider>
     </ThemeProvider>
