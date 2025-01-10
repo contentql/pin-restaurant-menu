@@ -870,6 +870,14 @@ export interface SiteSetting {
       | 'sar'
       | 'aed'
       | 'pln';
+    taxes?:
+      | {
+          name: string;
+          percentage: number;
+          id?: string | null;
+        }[]
+      | null;
+    discount?: number | null;
   };
   navbar: {
     logo: BrandLogo;
@@ -1059,6 +1067,14 @@ export interface SiteSettingsSelect<T extends boolean = true> {
         ogImageUrl?: T;
         keywords?: T;
         currency?: T;
+        taxes?:
+          | T
+          | {
+              name?: T;
+              percentage?: T;
+              id?: T;
+            };
+        discount?: T;
       };
   navbar?:
     | T

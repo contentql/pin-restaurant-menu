@@ -105,7 +105,7 @@ const Collection = () => {
       </DrawerTrigger>
 
       <DrawerContent aria-describedby={undefined}>
-        <div className='mx-auto w-full max-w-md space-y-6 px-4'>
+        <div className='mx-auto w-full max-w-md px-4'>
           <DrawerHeader className='relative px-0'>
             <DrawerTitle>Collection</DrawerTitle>
 
@@ -119,22 +119,26 @@ const Collection = () => {
             </DrawerClose>
           </DrawerHeader>
 
-          {collectionItems.length ? (
-            <div className='flex flex-col gap-y-4 pb-8'>
-              <AnimatePresence>
-                {collectionItems.map((item, index) => {
-                  return (
-                    <CollectionItem key={index} index={index} item={item} />
-                  )
-                })}
-              </AnimatePresence>
-            </div>
-          ) : (
-            <div className='flex flex-col items-center justify-center pb-8'>
-              <NoCollectionLogo className='size-32' />
-              <p>Collection is Empty!</p>
-            </div>
-          )}
+          <div
+            className='max-h-[70vh] overflow-y-scroll'
+            style={{ scrollbarGutter: 'stable' }}>
+            {collectionItems.length ? (
+              <div className='flex flex-col gap-y-4 pb-8'>
+                <AnimatePresence>
+                  {collectionItems.map((item, index) => {
+                    return (
+                      <CollectionItem key={index} index={index} item={item} />
+                    )
+                  })}
+                </AnimatePresence>
+              </div>
+            ) : (
+              <div className='flex flex-col items-center justify-center pb-8'>
+                <NoCollectionLogo className='size-32' />
+                <p>Collection is Empty!</p>
+              </div>
+            )}
+          </div>
         </div>
       </DrawerContent>
     </Drawer>
