@@ -39,6 +39,21 @@ export const seedSiteSettings = async ({ spinner }: { spinner: Ora }) => {
           faviconUrl: faviconUrl.id,
           ogImageUrl: ogImageUrl.id,
           currency: 'inr',
+          discount: 10,
+          taxes: [
+            {
+              name: 'CGST',
+              percentage: 8,
+            },
+            {
+              name: 'SGST',
+              percentage: 8,
+            },
+            {
+              name: 'Service Tax',
+              percentage: 5,
+            },
+          ],
         },
         navbar: {
           logo: {
