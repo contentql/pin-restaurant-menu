@@ -20,6 +20,13 @@ import { useMetadata } from '@/utils/metadataContext'
 
 import OrderInput from './OrderInput'
 
+function formatPrice(num: number) {
+  // Check if the number has significant digits beyond two decimal places
+  return num % 1 === 0 || Number(num.toFixed(2)) === Math.trunc(num)
+    ? Math.trunc(num).toString()
+    : num.toFixed(2)
+}
+
 const Cart = () => {
   const { cartItems, setCartItems } = useCartContext()
   const {
@@ -167,7 +174,7 @@ const Cart = () => {
               <div className='flex w-full justify-between'>
                 <p>Items Total:</p>
                 <span className='font-semibold'>
-                  {`${getCurrencySymbol(currency)} ${calculatedPrice.originalPrice}`}
+                  {`${getCurrencySymbol(currency)} ${formatPrice(calculatedPrice.originalPrice)}`}
                 </span>
               </div>
 
@@ -175,7 +182,7 @@ const Cart = () => {
                 <div className='flex w-full justify-between'>
                   <p>{`Discount (${discount}%)`}:</p>
                   <span className='font-semibold'>
-                    {`- ${getCurrencySymbol(currency)} ${calculatedPrice.discountPrice}`}
+                    {`- ${getCurrencySymbol(currency)} ${formatPrice(calculatedPrice.discountPrice)}`}
                   </span>
                 </div>
               ) : null}
@@ -185,7 +192,7 @@ const Cart = () => {
                     <div key={tax.name} className='flex w-full justify-between'>
                       <p>{`${tax.name} (${tax.percentage}%)`}:</p>
                       <span className='font-semibold'>
-                        {`${getCurrencySymbol(currency)} ${tax.amount}`}
+                        {`${getCurrencySymbol(currency)} ${formatPrice(tax.amount)}`}
                       </span>
                     </div>
                   ))
@@ -194,7 +201,7 @@ const Cart = () => {
               <div className='flex w-full justify-between'>
                 <p>To Pay:</p>
                 <span className='font-semibold'>
-                  {`${getCurrencySymbol(currency)} ${calculatedPrice.totalPrice}`}
+                  {`${getCurrencySymbol(currency)} ${formatPrice(calculatedPrice.totalPrice)}`}
                 </span>
               </div>
             </DrawerFooter>
