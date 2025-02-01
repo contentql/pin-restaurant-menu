@@ -43,7 +43,7 @@ const Form = ({
               acc[field.name] = field?.defaultValue || false
               break
             case 'number':
-              acc[field.name] = field.defaultValue || null
+              acc[field.name] = field.defaultValue || ''
               break
             case 'text':
             case 'textarea':
@@ -83,7 +83,6 @@ const Form = ({
     control,
     setValue,
     reset,
-    getValues,
   } = formMethod
 
   const { mutate, isPending } = useMutation({
@@ -143,7 +142,9 @@ const Form = ({
         const redirectUrl = url
         if (redirectUrl) router.push(redirectUrl)
       } else if (confirmationType === 'message' && confirmationMessage)
-        toast.success('🎉 Successfully submitted Form', { id: 'form-submit' })
+        toast.success('🎉 Successfully submitted your response', {
+          id: 'form-submit',
+        })
       reset()
     },
   })
@@ -159,28 +160,25 @@ const Form = ({
       className={className}>
       <div className='flex w-full flex-wrap gap-4 sm:gap-6'>
         <FormProvider {...formMethod}>
-          {fields
-            ? fields?.map((field, index) => {
-                const Field: React.FC<any> = fieldsJsx[field?.blockType]
-
-                if (Field) {
-                  return (
-                    <React.Fragment key={index}>
-                      <Field
-                        form={form}
-                        {...field}
-                        {...formMethod}
-                        register={register}
-                        errors={errors}
-                        setValue={setValue}
-                        control={control}
-                        getValues={getValues}
-                      />
-                    </React.Fragment>
-                  )
-                }
-              })
-            : null}
+          {fields &&
+            fields?.map((field, index) => {
+              const Field: React.FC<any> = fieldsJsx[field?.blockType]
+              if (Field) {
+                return (
+                  <React.Fragment key={index}>
+                    <Field
+                      form={form}
+                      {...field}
+                      {...formMethod}
+                      register={register}
+                      errors={errors}
+                      setValue={setValue}
+                      control={control}
+                    />
+                  </React.Fragment>
+                )
+              }
+            })}
         </FormProvider>
       </div>
 

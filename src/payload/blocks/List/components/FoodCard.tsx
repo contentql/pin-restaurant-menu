@@ -2,11 +2,10 @@
 
 import { formatCurrency } from '@contentql/core/client'
 import { FoodItem } from '@payload-types'
-import { Heart, X } from 'lucide-react'
+import { ChevronLeft, ChevronRight, Heart, X } from 'lucide-react'
 import Image from 'next/image'
-import { useState } from 'react'
-import { Pagination } from 'swiper/modules'
-import { Swiper, SwiperSlide } from 'swiper/react'
+import { memo, useState } from 'react'
+import { Swiper, SwiperSlide, useSwiper } from 'swiper/react'
 
 import { NonVegLogo, VegLogo } from '@/components/SVG'
 import Button from '@/components/common/Button'
@@ -24,13 +23,32 @@ import { useMetadata } from '@/utils/metadataContext'
 
 import OrderInput from './OrderInput'
 
-const FoodCard = ({ foodItem }: { foodItem: FoodItem }) => {
+const SlideButton = ({ dir }: { dir: 'right' | 'left' }) => {
+  const swiper = useSwiper()
+
+  return (
+    <Button
+      size='icon'
+      variant='outline'
+      onClick={() => {
+        if (dir === 'right') {
+          swiper.slideNext()
+        } else {
+          swiper.slidePrev()
+        }
+      }}>
+      {dir === 'left' ? <ChevronLeft size={16} /> : <ChevronRight size={16} />}
+    </Button>
+  )
+}
+
+const FoodCard = memo(({ foodItem }: { foodItem: FoodItem }) => {
   const [open, setOpen] = useState(false)
   const [count, setCount] = useState(1)
 
   const { setCartItems, setCollectionItems, collectionItems, cartItems } =
     useCartContext()
-  const { general } = useMetadata()
+  const { general, themeSettings } = useMetadata()
 
   const formattedCurrency = formatCurrency({
     amount: foodItem.price,
@@ -103,7 +121,7 @@ const FoodCard = ({ foodItem }: { foodItem: FoodItem }) => {
     <>
       <div
         onClick={() => setOpen(current => !current)}
-        className='mb-4 mt-2 flex w-full cursor-pointer justify-between gap-2 rounded-md border p-4 shadow-md'>
+        className={`mb-4 mt-2 flex w-full cursor-pointer ${themeSettings.radius === 'full' ? 'rounded-lg' : 'rounded'} justify-between gap-2  border p-4 shadow-md`}>
         <div>
           <div className='flex items-center gap-2'>
             {type === 'nonVeg' ? <NonVegLogo /> : <VegLogo />}
@@ -123,7 +141,8 @@ const FoodCard = ({ foodItem }: { foodItem: FoodItem }) => {
         </div>
 
         <div className='relative'>
-          <div className='relative size-32 flex-shrink-0 overflow-hidden rounded-sm bg-foreground/50'>
+          <div
+            className={`relative size-32 flex-shrink-0 overflow-hidden rounded bg-foreground/50`}>
             {coverPic ? (
               <Image src={coverPic.url} fill alt={coverPic.alt} sizes='600px' />
             ) : null}
@@ -169,6 +188,7 @@ const FoodCard = ({ foodItem }: { foodItem: FoodItem }) => {
             ) : (
               <>
                 <Button
+                  aria-label='Add to cart'
                   onClick={e => {
                     e.stopPropagation()
 
@@ -196,6 +216,7 @@ const FoodCard = ({ foodItem }: { foodItem: FoodItem }) => {
 
                 <Button
                   variant='outline'
+                  aria-label='Add to collection'
                   onClick={e => {
                     e.stopPropagation()
                     handleAddCollection()
@@ -233,8 +254,8 @@ const FoodCard = ({ foodItem }: { foodItem: FoodItem }) => {
                 pagination={{
                   clickable: true,
                 }}
-                modules={[Pagination]}
-                className='mx-auto h-60 w-full rounded-sm'>
+                loop
+                className={`mx-auto h-60 w-full ${themeSettings.radius === 'full' ? 'rounded-lg' : 'rounded'}`}>
                 {images
                   ? images.map(item => {
                       if (item) {
@@ -256,6 +277,15 @@ const FoodCard = ({ foodItem }: { foodItem: FoodItem }) => {
                       return null
                     })
                   : null}
+
+                {images && images.length > 1 ? (
+                  <div className='absolute bottom-4 right-4 z-10 mt-4 flex w-full items-center justify-end gap-3'>
+                    <div className='w-max space-x-2 rounded bg-background/50 p-2 backdrop-blur-lg '>
+                      <SlideButton dir='left' />
+                      <SlideButton dir='right' />
+                    </div>
+                  </div>
+                ) : null}
               </Swiper>
 
               <div className='mt-4'>
@@ -301,6 +331,8 @@ const FoodCard = ({ foodItem }: { foodItem: FoodItem }) => {
       </Drawer>
     </>
   )
-}
+})
+
+FoodCard.displayName = 'FoodCard'
 
 export default FoodCard
