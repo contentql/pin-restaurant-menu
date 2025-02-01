@@ -13,7 +13,12 @@ export const revalidateForm: CollectionAfterChangeHook<Form> = async ({
     collection: 'pages',
     limit: 10000,
     select: {
-      layout: true,
+      layout: {
+        FormBlock: {
+          form: true,
+          title: true,
+        },
+      },
       path: true,
     },
     depth: 10,
@@ -24,6 +29,8 @@ export const revalidateForm: CollectionAfterChangeHook<Form> = async ({
       if (layout) {
         const hasForm = layout.find(block => {
           if (block.blockType === 'FormBlock') {
+            console.log({ block })
+
             const form =
               typeof block.form.value === 'object'
                 ? block.form.value
@@ -38,6 +45,9 @@ export const revalidateForm: CollectionAfterChangeHook<Form> = async ({
 
         // revalidating that particular page
         if (hasForm) {
+          console.log(
+            `revalidated ${path} on ${doc.title}-form update at ${new Date().getTime()}`,
+          )
           revalidatePath(`${path}`)
         }
       }

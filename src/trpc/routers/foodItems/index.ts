@@ -41,14 +41,6 @@ export const foodItemsRouter = router({
           }
         }
 
-        console.log(
-          categoryIDs.map(id => ({
-            categories: {
-              contains: id,
-            },
-          })),
-        )
-
         const { docs = [] } = await payload.find({
           collection: 'foodItems',
           limit: 10000,

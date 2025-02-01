@@ -2,6 +2,7 @@ import { cqlConfig } from '@contentql/core/restaurant'
 import { env } from '@env'
 import { slateEditor } from '@payloadcms/richtext-slate'
 import path from 'path'
+import sharp from 'sharp'
 import { fileURLToPath } from 'url'
 
 import { ResetPassword } from '@/emails/reset-password'
@@ -166,4 +167,6 @@ export default cqlConfig({
       ],
     },
   }),
+
+  sharp,
 })

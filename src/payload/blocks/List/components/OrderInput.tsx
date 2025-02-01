@@ -20,6 +20,7 @@ const OrderInput = ({
       <Button
         variant='outline'
         size='icon'
+        aria-label='Remove Item'
         className='border-none'
         onClick={e => {
           e.stopPropagation()
@@ -35,6 +36,7 @@ const OrderInput = ({
       <Button
         variant='outline'
         size='icon'
+        aria-label='Add Item'
         className='border-none'
         onClick={e => {
           e.stopPropagation()

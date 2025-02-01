@@ -92,7 +92,7 @@ const Collection = () => {
     <Drawer>
       <DrawerTrigger asChild>
         <div className='relative'>
-          <Button className='px-2.5'>
+          <Button className='px-2.5' aria-label='Collections'>
             <Heart size={20} />
           </Button>
 

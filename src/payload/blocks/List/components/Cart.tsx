@@ -103,7 +103,7 @@ const Cart = () => {
     <Drawer>
       <DrawerTrigger asChild>
         <div className='relative'>
-          <Button className='px-2.5'>
+          <Button className='px-2.5' aria-label='Cart'>
             <ShoppingCart size={20} />
           </Button>
 
