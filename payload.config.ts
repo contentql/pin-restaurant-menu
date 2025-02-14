@@ -9,9 +9,18 @@ import { ResetPassword } from '@/emails/reset-password'
 import { UserAccountVerification } from '@/emails/verify-email'
 import { migrations } from '@/migrations'
 import { blocksConfig } from '@/payload/blocks/blockConfig'
-import { revalidateCategories } from '@/payload/hooks/revalidateCategories'
-import { revalidateFoodItems } from '@/payload/hooks/revalidateFoodItems'
-import { revalidatePages } from '@/payload/hooks/revalidatePages'
+import {
+  revalidateCategoriesAfterChange,
+  revalidateCategoriesAfterDelete,
+} from '@/payload/hooks/revalidateCategories'
+import {
+  revalidateFoodItemsAfterChange,
+  revalidateFoodItemsAfterDelete,
+} from '@/payload/hooks/revalidateFoodItems'
+import {
+  revalidatePagesAfterChange,
+  revalidatePagesAfterDelete,
+} from '@/payload/hooks/revalidatePages'
 import { revalidateSiteSettings } from '@/payload/hooks/revalidateSiteSettings'
 
 const filename = fileURLToPath(import.meta.url)
@@ -92,21 +101,24 @@ export default cqlConfig({
       slug: 'pages',
       fields: [],
       hooks: {
-        afterChange: [revalidatePages],
+        afterChange: [revalidatePagesAfterChange],
+        afterDelete: [revalidatePagesAfterDelete],
       },
     },
     {
       slug: 'foodItems',
       fields: [],
       hooks: {
-        afterChange: [revalidateFoodItems],
+        afterChange: [revalidateFoodItemsAfterChange],
+        afterDelete: [revalidateFoodItemsAfterDelete],
       },
     },
     {
       slug: 'categories',
       fields: [],
       hooks: {
-        afterChange: [revalidateCategories],
+        afterChange: [revalidateCategoriesAfterChange],
+        afterDelete: [revalidateCategoriesAfterDelete],
       },
     },
   ],

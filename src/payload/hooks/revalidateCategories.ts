@@ -1,8 +1,11 @@
 import { Category } from '@payload-types'
 import { revalidateTag } from 'next/cache'
-import type { CollectionAfterChangeHook } from 'payload'
+import type {
+  CollectionAfterChangeHook,
+  CollectionAfterDeleteHook,
+} from 'payload'
 
-export const revalidateCategories: CollectionAfterChangeHook<
+export const revalidateCategoriesAfterChange: CollectionAfterChangeHook<
   Category
 > = async ({ doc, previousDoc }) => {
   if (
@@ -14,4 +17,13 @@ export const revalidateCategories: CollectionAfterChangeHook<
     revalidateTag('list-categories')
     console.log(`revalidated foodItems & categories at ${new Date().getTime()}`)
   }
+}
+
+export const revalidateCategoriesAfterDelete: CollectionAfterDeleteHook<
+  Category
+> = async () => {
+  // Revalidating both categories & food items
+  revalidateTag('list-food-items')
+  revalidateTag('list-categories')
+  console.log(`revalidated foodItems & categories at ${new Date().getTime()}`)
 }
